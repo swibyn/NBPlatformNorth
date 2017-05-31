@@ -239,14 +239,6 @@ NSString *sValueWillChang = @"ValueWillChang";
 
 //读取本地配置
 -(void)readLocalDictData{
-//    appInfoDict = [[NSUserDefaults standardUserDefaults] objectForKey:vappInfoDict];
-//    appInfoDict = [appInfoDict deepMutableCopy];
-//    if ([appInfoDict[fappId] length] == 0) {
-//        appInfoDict = [NSMutableDictionary dictionary];
-//        appInfoDict[fappId] = @"aphfRfLLHFbB0_2uMRRuwYQIbr8a";
-//        appInfoDict[fsecret] = @"tfWyoIbcyY8idnE74o1fiQH_2Vwa";
-//        appInfoDict[vbaseUrl] = @"https://112.93.129.156:8743";
-//    }
     
     NSData *requestDictData = [[NSUserDefaults standardUserDefaults] objectForKey:vrequestDict];
     requestDict = [NSJSONSerialization JSONObjectWithData:requestDictData options:NSJSONReadingAllowFragments error:nil];
@@ -261,6 +253,14 @@ NSString *sValueWillChang = @"ValueWillChang";
     if (!responseDict) {
         responseDict = [NSMutableDictionary dictionary];
     }
+}
+
+-(void)saveLocalDictData{
+    NSData *requestDictData = [NSJSONSerialization dataWithJSONObject:requestDict options:0 error:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:requestDictData forKey:vrequestDict];
+    
+    NSData *responseDictData = [NSJSONSerialization dataWithJSONObject:responseDict options:0 error:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:responseDictData forKey:vresponseDict];
 }
 
 //把container中的默认值赋值到mutableDict对应的地方，如果已有值不覆盖
@@ -526,6 +526,9 @@ NSString *sValueWillChang = @"ValueWillChang";
         }
         
         [requestDict setObject:jsonobj forPath:keyPath];
+        [self.tableViewDetail reloadData];
+        [self saveLocalDictData];
+        
     }];
     [alertC addAction:action];
     
@@ -920,7 +923,7 @@ NSString *sValueWillChang = @"ValueWillChang";
 */
 //@{sTitle:@"查询设备历史数据",sMethod:@"DeviceDataHistory:"},
 -(void)DeviceDataHistory:(NSDictionary *)dic{
-    NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vDeleteDevice];
+    NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vDeviceDataHistory];
     info[fdeviceId] = requestDict[fdeviceId];
     [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         

@@ -13,6 +13,7 @@
 #define httpDELETE  @"DELETE"
 #define httpPUT  @"PUT"
 #define httpBaseUrl @""
+#define httpUrlStr @"UrlStr"
 
 #define headerAPPKey @"app_key"
 #define headerAuthorization @"Authorization"

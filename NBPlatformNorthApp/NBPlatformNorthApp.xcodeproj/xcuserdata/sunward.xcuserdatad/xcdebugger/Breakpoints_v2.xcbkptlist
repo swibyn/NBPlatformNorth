@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "631"
-            endingLineNumber = "631"
+            startingLineNumber = "634"
+            endingLineNumber = "634"
             landmarkName = "@implementation NBApisViewController"
             landmarkType = "3">
             <Locations>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "879"
-            endingLineNumber = "879"
+            startingLineNumber = "882"
+            endingLineNumber = "882"
             landmarkName = "-SelectDevice:"
             landmarkType = "7">
             <Locations>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "667"
-            endingLineNumber = "667"
+            startingLineNumber = "670"
+            endingLineNumber = "670"
             landmarkName = "@implementation NBApisViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "857"
-            endingLineNumber = "857"
+            startingLineNumber = "860"
+            endingLineNumber = "860"
             landmarkName = "@implementation NBApisViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "898"
-            endingLineNumber = "898"
+            startingLineNumber = "901"
+            endingLineNumber = "901"
             landmarkName = "-QueryDevice:"
             landmarkType = "7">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "584"
-            endingLineNumber = "584"
+            startingLineNumber = "587"
+            endingLineNumber = "587"
             landmarkName = "-RefreshToken:"
             landmarkType = "7">
             <Locations>
@@ -298,11 +298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "585"
-            endingLineNumber = "585"
+            startingLineNumber = "588"
+            endingLineNumber = "588"
             landmarkName = "-RefreshToken:"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517896313.320863"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1120"
-            endingLineNumber = "1120"
+            startingLineNumber = "1123"
+            endingLineNumber = "1123"
             landmarkName = "@implementation NBApisViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -378,11 +378,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "599"
-            endingLineNumber = "599"
+            startingLineNumber = "602"
+            endingLineNumber = "602"
             landmarkName = "-RefreshToken:"
             landmarkType = "7">
          </BreakpointContent>
@@ -442,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "610"
-            endingLineNumber = "610"
+            startingLineNumber = "613"
+            endingLineNumber = "613"
             landmarkName = "-RegisterDevice:"
             landmarkType = "7">
          </BreakpointContent>
@@ -458,11 +458,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517895880.612873"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "611"
-            endingLineNumber = "611"
+            startingLineNumber = "614"
+            endingLineNumber = "614"
             landmarkName = "-RegisterDevice:"
             landmarkType = "7">
          </BreakpointContent>
@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NBPlatformNorthApp/NBApisViewController.m"
-            timestampString = "517896313.320863"
+            timestampString = "517903976.42527"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "925"
-            endingLineNumber = "925"
+            startingLineNumber = "928"
+            endingLineNumber = "928"
             landmarkName = "-DeviceDataHistory:"
             landmarkType = "7">
             <Locations>
@@ -490,12 +490,12 @@
                   moduleName = "NBPlatformNorthApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/sunward/nbiot/NBPlatformNorth/NBPlatformNorthApp/NBPlatformNorthApp/NBApisViewController.m"
-                  timestampString = "517896069.545877"
+                  timestampString = "517904447.680612"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "924"
-                  endingLineNumber = "924"
-                  offsetFromSymbolStart = "112">
+                  startingLineNumber = "928"
+                  endingLineNumber = "928"
+                  offsetFromSymbolStart = "228">
                </Location>
                <Location
                   shouldBeEnabled = "No"
@@ -505,11 +505,11 @@
                   moduleName = "NBPlatformNorthApp"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/sunward/nbiot/NBPlatformNorth/NBPlatformNorthApp/NBPlatformNorthApp/NBApisViewController.m"
-                  timestampString = "517896069.548438"
+                  timestampString = "517904447.684312"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "926"
-                  endingLineNumber = "926"
+                  startingLineNumber = "930"
+                  endingLineNumber = "930"
                   offsetFromSymbolStart = "120">
                </Location>
             </Locations>
@@ -528,6 +528,22 @@
             startingLineNumber = "475"
             endingLineNumber = "475"
             landmarkName = "-DeviceDataHistory:completionHandler:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NBPlatformNorthApp/NBApisViewController.m"
+            timestampString = "517903458.458268"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "506"
+            endingLineNumber = "506"
+            landmarkName = "-modifyValueForDictionary:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
