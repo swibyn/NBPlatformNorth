@@ -38,6 +38,7 @@ NSString *sTitle = @"Title";
 NSString *sMethod = @"Method";
 NSString *sItems = @"Items";
 NSString *sDefaultValue = @"DefaultValue";
+NSString *sValueWillChang = @"ValueWillChang";
 
 
 @interface NSArray (apis)
@@ -81,12 +82,57 @@ NSString *sDefaultValue = @"DefaultValue";
 
 @end
 
+@interface NSObject (jsonDescription)
+
+-(NSString *)jsonDescription;
+
+@end
+
+@implementation NSObject (jsonDescription)
+
+-(NSString *)jsonDescription{
+    if ([self isKindOfClass:[NSArray class]] || [self isKindOfClass:[NSDictionary class]]) {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:nil];
+        NSString *str = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+        return str;
+    }else{
+        return  [self description];
+    }
+}
+
+@end
+
+@interface NSString (jsonObj)
+
+-(NSObject *)jsonObjectLike:(NSObject *)obj;
+
+@end
+
+@implementation NSString (jsonObj)
+
+-(NSObject *)jsonObjectLike:(NSObject *)obj{
+    if ([obj isKindOfClass:[NSArray class]] || [obj isKindOfClass:[NSDictionary class]]) {
+        NSData *data = [self dataUsingEncoding:NSASCIIStringEncoding];
+        id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        return jsonObj;
+    }else if ([obj isKindOfClass:[NSNumber class]]){
+        NSNumber *num = [NSNumber numberWithDouble: [self doubleValue]];
+        return  num;
+    }
+    return self;
+}
+
+@end
+
+
 @interface NBApisViewController ()<WebApiDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     NSIndexPath *accessoryButtonTappedIndexPath;
 }
 
 @end
+
+
 
 @implementation NBApisViewController
 
@@ -100,13 +146,14 @@ NSString *sDefaultValue = @"DefaultValue";
 }
 
 
+
 -(NSArray *)apisArray{
     return @[
              @{sTitle : @"应用安全接入", sItems : @[
                        @{sTitle:@"鉴权",sMethod:@"Auth:",sItems:@[
-                                 @{sTitle:fappId,sMethod:@"Auth_appId:",sKeyPath:@[fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a"},
-                                 @{sTitle:fsecret,sMethod:@"Auth_secret:",sKeyPath:@[fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
-                                 @{sTitle:vbaseUrl,sMethod:@"Auth_baseUrl:",sKeyPath:@[vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743"}
+                                 @{sTitle:fappId,sMethod:@"Auth_appId:",sKeyPath:@[ fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a",sValueWillChang:@"Auth_appId_valueWillChang:"},
+                                 @{sTitle:fsecret,sMethod:@"Auth_secret:",sKeyPath:@[ fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
+                                 @{sTitle:vbaseUrl,sMethod:@"Auth_baseUrl:",sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"}
                                  ]},
                        @{sTitle:@"刷新 token",sMethod:@"RefreshToken:"}]},
              @{sTitle:@"设备管理",sItems:@[
@@ -139,7 +186,7 @@ NSString *sDefaultValue = @"DefaultValue";
                                  @{sTitle:fgatewayId,sMethod:@"QueryAllDevice_gatewayId:",sKeyPath:@[vQueryAllDevice,fgatewayId]},
                                  @{sTitle:fnodeType,sMethod:@"QueryAllDevice_nodeType:",sKeyPath:@[vQueryAllDevice,fnodeType]},
                                  @{sTitle:fpageNo,sMethod:@"QueryAllDevice_pageNo:",sKeyPath:@[vQueryAllDevice,fpageNo],sDefaultValue:@"0"},
-                                 @{sTitle:fpageSize,sMethod:@"QueryAllDevice_pageSize:",sKeyPath:@[vQueryAllDevice,fpageSize]},
+                                 @{sTitle:fpageSize,sMethod:@"QueryAllDevice_pageSize:",sKeyPath:@[vQueryAllDevice,fpageSize],sDefaultValue:@"100"},
                                  @{sTitle:fstatus,sMethod:@"QueryAllDevice_status:",sKeyPath:@[vQueryAllDevice,fstatus]},
                                  @{sTitle:fstartTime,sMethod:@"QueryAllDevice_startTime:",sKeyPath:@[vQueryAllDevice,fstartTime]},
                                  @{sTitle:fendTime,sMethod:@"QueryAllDevice_endTime:",sKeyPath:@[vQueryAllDevice,fendTime]},
@@ -164,11 +211,11 @@ NSString *sDefaultValue = @"DefaultValue";
              @{sTitle:@"下发消息",sItems:@[
                        @{sTitle:@"向设备投递异步命令",sMethod:@"PostCommandToDevice:",sItems:@[
                                  @{sTitle:frequestId,sMethod:@"PostCommandToDevice_requestId:",sKeyPath:@[vPostCommandToDevice,fbody, frequestId]},
-                                 @{sTitle:fserviceId,sMethod:@"PostCommandToDevice_command_serviceId:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId]},
-                                 @{sTitle:fmethod,sMethod:@"PostCommandToDevice_command_method:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod]},
-                                 @{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas]},
+                                 @{sTitle:fserviceId,sMethod:@"PostCommandToDevice_command_serviceId:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"Parking"},
+                                 @{sTitle:fmethod,sMethod:@"PostCommandToDevice_command_method:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM"},
+                                 @{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@0}},
                                  @{sTitle:fcallbackUrl,sMethod:@"PostCommandToDevice_callbackUrl:",sKeyPath:@[vPostCommandToDevice,fbody, fcallbackUrl]},
-                                 @{sTitle:fexpireTime,sMethod:@"PostCommandToDevice_expireTime:",sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime]}
+                                 @{sTitle:fexpireTime,sMethod:@"PostCommandToDevice_expireTime:",sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
                                  ]},
                        @{sTitle:@"查询异步命令",sMethod:@"QueryCommand:",sItems:@[
                                  @{sTitle:fpageNo,sMethod:@"QueryCommand_pageNo:",sKeyPath:@[vQueryCommand,fpageNo]},
@@ -201,13 +248,15 @@ NSString *sDefaultValue = @"DefaultValue";
 //        appInfoDict[vbaseUrl] = @"https://112.93.129.156:8743";
 //    }
     
-    requestDict = [[NSUserDefaults standardUserDefaults] objectForKey:vrequestDict];
+    NSData *requestDictData = [[NSUserDefaults standardUserDefaults] objectForKey:vrequestDict];
+    requestDict = [NSJSONSerialization JSONObjectWithData:requestDictData options:NSJSONReadingAllowFragments error:nil];
     requestDict = [requestDict deepMutableCopy];
     if (!requestDict) {
         requestDict = [NSMutableDictionary dictionary];
     }
     
-    responseDict = [[NSUserDefaults standardUserDefaults] objectForKey:vresponseDict];
+    NSData *responseDictData = [[NSUserDefaults standardUserDefaults] objectForKey:vresponseDict];
+    responseDict = [NSJSONSerialization JSONObjectWithData:responseDictData options:NSJSONReadingAllowFragments error:nil];
     responseDict = [responseDict deepMutableCopy];
     if (!responseDict) {
         responseDict = [NSMutableDictionary dictionary];
@@ -246,6 +295,11 @@ NSString *sDefaultValue = @"DefaultValue";
     
     [self readLocalDictData];
     [self setDefaultValueToDictionary:requestDict in:funapis];
+    
+    WebApi *webApi = [WebApi shareWebApi];
+    webApi.appId = requestDict[fappId];
+    webApi.baseUrl = requestDict[vbaseUrl];
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -300,7 +354,9 @@ NSString *sDefaultValue = @"DefaultValue";
     }else if (tableView == self.tableViewDetail){
         NSDictionary *dict = [funapis dictionaryForRow:indexPath.row atIndexPath:accessoryButtonTappedIndexPath];
         cell.textLabel.text = dict[sTitle];
-        cell.detailTextLabel.text = dict[sTitle];
+        NSArray *keyPath = dict[sKeyPath];
+        NSString *text = [requestDict objectForPath:keyPath];
+        cell.detailTextLabel.text = text;
     }
     
     //    cell.detailTextLabel.text = dict[sMethod];
@@ -408,6 +464,9 @@ NSString *sDefaultValue = @"DefaultValue";
 }
 
 #pragma mark - tools
+//-(void)resetWebApi{
+//}
+
 #pragma mark - alert utils
 -(void)alertWithTitle:(NSString *)title text:(NSString *)text handler:(void (^ __nullable)(UIAlertController *alertC, UIAlertAction *action))handler{
     
@@ -447,15 +506,26 @@ NSString *sDefaultValue = @"DefaultValue";
     NSLog(@"%s",__FUNCTION__);
     NSString *title = dict[sTitle];
     NSArray *keyPath = dict[sKeyPath];
-    NSString *currentValue = [requestDict objectForPath:keyPath];
+    id currentValue = [requestDict objectForPath:keyPath];
     
     UIAlertController *alertC = [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = currentValue;
+        textField.text = [currentValue jsonDescription];
     }];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *text = alertC.textFields[0].text;
-        [requestDict setObject:text forPath:keyPath];
+        NSObject *jsonobj = [text jsonObjectLike:currentValue];
+        NSString *valueWillChang = dict[sValueWillChang];
+        if (valueWillChang) {
+            SEL sel = NSSelectorFromString(valueWillChang);
+            if ([self respondsToSelector:sel]){
+                IMP imp = [self methodForSelector:sel];
+                void (*func)(id,SEL,NSObject *) = (void *)imp;
+                func(self, sel, jsonobj);
+            }
+        }
+        
+        [requestDict setObject:jsonobj forPath:keyPath];
     }];
     [alertC addAction:action];
     
@@ -481,11 +551,22 @@ NSString *sDefaultValue = @"DefaultValue";
                 NSError *error;
                 NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 responseDict[vauthInfo] = dic;
+                [WebApi shareWebApi].accessToken = dic[faccessToken];
             }
         }
     }];
 }
 
+-(void)Auth_appId_valueWillChanged:(NSObject *)newValue{
+    [WebApi shareWebApi].appId = (NSString *)newValue;
+}
+
+-(void)Auth_baseUrl_valueWillChanged:(NSObject *)newValue{
+    [WebApi shareWebApi].baseUrl = (NSString *)newValue;
+}
+
+
+/*
 //@{sTitle:fappId,sMethod:@"Auth_appId:"},
 -(void)Auth_appId:(NSDictionary *)dic{
     [self inputAlertWithTitle:fappId forDic:requestDict forPath:@[fappId]];
@@ -498,7 +579,7 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)Auth_baseUrl:(NSDictionary *)dic{
     [self inputAlertWithTitle:vbaseUrl forDic:requestDict forPath:@[vbaseUrl]];
 }
-
+*/
 
 -(void)RefreshToken:(NSDictionary *)dic{
     NSString *refreshToken = responseDict[vauthInfo][frefreshToken];
@@ -516,6 +597,7 @@ NSString *sDefaultValue = @"DefaultValue";
                 NSError *error;
                 NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 responseDict[vauthInfo] = dic;
+                [WebApi shareWebApi].accessToken = dic[faccessToken];
             }
         }
     }];
@@ -531,7 +613,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fverifyCode,sMethod:@"RegisterDevice_verifyCode:"},
 -(void)RegisterDevice_verifyCode:(NSDictionary *)dic{
     [self inputAlertWithTitle:fverifyCode forRequestDicPath:@[vRegisterDevice,fbody,fverifyCode]];
@@ -565,6 +647,7 @@ NSString *sDefaultValue = @"DefaultValue";
 //    }];
     
 }
+*/
 //@{sTitle:@"设置设备信息",sMethod:@"SetDeviceInfo:"},
 -(void)SetDeviceInfo:(NSDictionary *)dic{
     NSDictionary *info = requestDict[vSetDeviceInfo];
@@ -572,7 +655,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fname,sMethod:@"SetDeviceInfo_name:"},
 -(void)SetDeviceInfo_name:(NSDictionary *)dic{
     [self inputAlertWithTitle:fname forRequestDicPath:@[vSetDeviceInfo,fbody,fname]];
@@ -654,7 +737,7 @@ NSString *sDefaultValue = @"DefaultValue";
 //    }];
     
 }
-
+*/
 //@{sTitle:@"查询设备激活状态",sMethod:@"QueryDeviceActiveStatus:"},
 -(void)QueryDeviceActiveStatus:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vQueryDeviceActiveStatus];
@@ -680,7 +763,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fabnormalTime,sMethod:@"SetApplication_abnormalTime:"},
 -(void)SetApplication_abnormalTime:(NSDictionary *)dic{
     [self inputAlertWithTitle:fabnormalTime forRequestDicPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fabnormalTime]];
@@ -689,7 +772,7 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)SetApplication_offlineTime:(NSDictionary *)dic{
     [self inputAlertWithTitle:fofflineTime forRequestDicPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fofflineTime]];
 }
-
+*/
 #pragma mark - 数据采集
 
 //@{sTitle:@"批量查询设备信息",sMethod:@"QueryAllDevice:",sItems:@[
@@ -711,7 +794,7 @@ NSString *sDefaultValue = @"DefaultValue";
     }];
     
 }
-
+/*
 //@{sTitle:@"gatewayId",sMethod:@"QueryAllDevice_gatewayId:"},
 -(void)QueryAllDevice_gatewayId:(NSDictionary *)dic{
     [self inputAlertWithTitle:fgatewayId forRequestDicPath:@[vQueryAllDevice,fgatewayId]];
@@ -786,7 +869,7 @@ NSString *sDefaultValue = @"DefaultValue";
 //    }];
     
 }
-
+*/
 
 //@{sTitle:@"选择设备",sMethod:@"SelectDevice:"},
 -(void)SelectDevice:(NSDictionary *)dic{
@@ -825,7 +908,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fnotifyType,sMethod:@"SubscribeDeviceChangeInfo_notifyType"},
 -(void)SubscribeDeviceChangeInfo_notifyType:(NSDictionary *)dic{
     [self inputAlertWithTitle:fnotifyType forRequestDicPath:@[vSubscribeDeviceChangeInfo,fbody,fnotifyType]];
@@ -834,15 +917,16 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)SubscribeDeviceChangeInfo_callbackurl:(NSDictionary *)dic{
     [self inputAlertWithTitle:fcallbackurl forRequestDicPath:@[vSubscribeDeviceChangeInfo,fbody,fcallbackurl]];
 }
-
+*/
 //@{sTitle:@"查询设备历史数据",sMethod:@"DeviceDataHistory:"},
 -(void)DeviceDataHistory:(NSDictionary *)dic{
-    NSDictionary *info = requestDict[vDeviceDataHistory];
+    NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vDeleteDevice];
+    info[fdeviceId] = requestDict[fdeviceId];
     [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
 }
-
+/*
 //@{sTitle:fgatewayId,sMethod:@"DeviceDataHistory_gatewayId:"},
 -(void)DeviceDataHistory_gatewayId:(NSDictionary *)dic{
     [self inputAlertWithTitle:fgatewayId forRequestDicPath:@[vDeviceDataHistory,fgatewayId]];
@@ -867,6 +951,7 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)DeviceDataHistory_endTime:(NSDictionary *)dic{
     [self inputAlertWithTitle:fendTime forRequestDicPath:@[vDeviceDataHistory,fendTime]];
 }
+*/
 //@{sTitle:@"查询设备的服务能力",sMethod:@"QueryDeviceCapability:"}
 -(void)QueryDeviceCapability:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey: vQueryDeviceCapability];
@@ -887,7 +972,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:frequestId,sMethod:@"PostCommandToDevice_requestId:"},
 -(void)PostCommandToDevice_requestId:(NSDictionary *)dic{
     [self inputAlertWithTitle:frequestId forRequestDicPath:@[vPostCommandToDevice,fbody, frequestId]];
@@ -949,7 +1034,7 @@ NSString *sDefaultValue = @"DefaultValue";
 //    }];
     
 }
-
+*/
 
 //@{sTitle:@"查询异步命令",sMethod:@"QueryCommand:"},
 -(void)QueryCommand:(NSDictionary *)dic{
@@ -960,7 +1045,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fpageNo,sMethod:@"QueryCommand_pageNo:"},
 -(void)QueryCommand_pageNo:(NSDictionary *)dic{
     [self inputAlertWithTitle:fpageNo forRequestDicPath:@[vQueryCommand,fpageNo]];
@@ -979,7 +1064,7 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)QueryCommand_endTime:(NSDictionary *)dic{
     [self inputAlertWithTitle:fendTime forRequestDicPath:@[vQueryCommand,fendTime]];
 }
-
+*/
 //@{sTitle:@"撤销异步命令",sMethod:@"CancelCommand:"},
 -(void)CancelCommand:(NSDictionary *)dic{
     NSDictionary *info = @{fbody:@{fdeviceId:requestDict[fdeviceId]}};
@@ -998,7 +1083,7 @@ NSString *sDefaultValue = @"DefaultValue";
         
     }];
 }
-
+/*
 //@{sTitle:fcommandId,sMethod:@"UpdateCommand_commandId:"},
 -(void)UpdateCommand_commandId:(NSDictionary *)dic{
     [self inputAlertWithTitle:fcommandId forRequestDicPath:@[vUpdateCommand,fcommandId]];
@@ -1011,7 +1096,7 @@ NSString *sDefaultValue = @"DefaultValue";
 -(void)UpdateCommand_result_resultDetail:(NSDictionary *)dic{
     [self inputAlertWithTitle:fresultDetail forRequestDicPath:@[vUpdateCommand,fresult,fresultDetail]];
 }
-
+*/
 #pragma mark - 其它
 
 //@{sTitle:@"恢复默认配置",sMethod:@"RestoreDefaultDict:"},

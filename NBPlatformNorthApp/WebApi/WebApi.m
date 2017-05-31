@@ -470,9 +470,9 @@
 //查询设备历史数据
 -(void)DeviceDataHistory:(NSDictionary *)dic completionHandler:(CompletionHandler)completionHandler{
     
-//    NSString *parama = [dic stringValuesWithKeys:@[fdeviceId,fgatewayId,fserviceId,fpageNo,fpageSize,fstartTime,fendTime] andSeparate:@"&"];
+    NSString *parama = [dic stringValuesWithKeys:@[fdeviceId,fgatewayId,fserviceId,fpageNo,fpageSize,fstartTime,fendTime] andSeparate:@"&"];
     
-    NSString *url = [NSString stringWithFormat:@"/iocm/app/data/v1.1.0/deviceDataHistory"];
+    NSString *url = [NSString stringWithFormat:@"/iocm/app/data/v1.1.0/deviceDataHistory?%@",parama];
     NSMutableURLRequest *request = [self mutableRequestWithUrl:url httpMethod:httpGET dic:dic];
     
     [self sendRequest:request completionHandler:completionHandler];
