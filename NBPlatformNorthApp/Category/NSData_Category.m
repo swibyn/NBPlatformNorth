@@ -22,20 +22,20 @@
     return mutableStr;
 }
 
--(NSData *)backCode{
-    if (self.length > 1) {
-        NSData *data = [self subdataWithRange:NSMakeRange(self.length - 2, 2)];
-        return data;
-    }
-    return nil;
-}
--(NSData *)backData{
-    if (self.length > 2) {
-        NSData *data = [self subdataWithRange:NSMakeRange(0, self.length - 2)];
-        return data;
-    }
-    return nil;
-}
+//-(NSData *)backCode{
+//    if (self.length > 1) {
+//        NSData *data = [self subdataWithRange:NSMakeRange(self.length - 2, 2)];
+//        return data;
+//    }
+//    return nil;
+//}
+//-(NSData *)backData{
+//    if (self.length > 2) {
+//        NSData *data = [self subdataWithRange:NSMakeRange(0, self.length - 2)];
+//        return data;
+//    }
+//    return nil;
+//}
 
 
 @end

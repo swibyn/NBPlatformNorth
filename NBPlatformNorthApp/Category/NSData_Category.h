@@ -21,8 +21,8 @@
 
 //-(NSArray *)
 
-@property (readonly) NSData *backCode;//应用返回的状态码
-@property (readonly) NSData *backData;//应用返回的数据
+//@property (readonly) NSData *backCode;//应用返回的状态码
+//@property (readonly) NSData *backData;//应用返回的数据
 
 @end
 

@@ -213,7 +213,7 @@ NSString *sValueWillChang = @"ValueWillChang";
                                  @{sTitle:frequestId,sMethod:@"PostCommandToDevice_requestId:",sKeyPath:@[vPostCommandToDevice,fbody, frequestId]},
                                  @{sTitle:fserviceId,sMethod:@"PostCommandToDevice_command_serviceId:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"Parking"},
                                  @{sTitle:fmethod,sMethod:@"PostCommandToDevice_command_method:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM"},
-                                 @{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@0}},
+                                 @{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@3}},
                                  @{sTitle:fcallbackUrl,sMethod:@"PostCommandToDevice_callbackUrl:",sKeyPath:@[vPostCommandToDevice,fbody, fcallbackUrl]},
                                  @{sTitle:fexpireTime,sMethod:@"PostCommandToDevice_expireTime:",sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
                                  ]},
@@ -255,12 +255,14 @@ NSString *sValueWillChang = @"ValueWillChang";
     }
 }
 
+-(void)saveDictData:(NSDictionary *)dict forKey:(NSString *)key{
+    NSData *dictData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:dictData forKey:key];
+}
+
 -(void)saveLocalDictData{
-    NSData *requestDictData = [NSJSONSerialization dataWithJSONObject:requestDict options:0 error:nil];
-    [[NSUserDefaults standardUserDefaults] setObject:requestDictData forKey:vrequestDict];
-    
-    NSData *responseDictData = [NSJSONSerialization dataWithJSONObject:responseDict options:0 error:nil];
-    [[NSUserDefaults standardUserDefaults] setObject:responseDictData forKey:vresponseDict];
+    [self saveDictData:requestDict forKey:vrequestDict];
+    [self saveDictData:responseDict forKey:vresponseDict];
 }
 
 //把container中的默认值赋值到mutableDict对应的地方，如果已有值不覆盖
@@ -292,6 +294,7 @@ NSString *sValueWillChang = @"ValueWillChang";
     // Do any additional setup after loading the view.
     
     funapis = [self apisArray];
+//    NSLog(@"%@",funapis);
     
     [self readLocalDictData];
     [self setDefaultValueToDictionary:requestDict in:funapis];
@@ -299,6 +302,7 @@ NSString *sValueWillChang = @"ValueWillChang";
     WebApi *webApi = [WebApi shareWebApi];
     webApi.appId = requestDict[fappId];
     webApi.baseUrl = requestDict[vbaseUrl];
+    webApi.accessToken = responseDict[vauthInfo][faccessToken];
     
 }
 
@@ -356,7 +360,7 @@ NSString *sValueWillChang = @"ValueWillChang";
         cell.textLabel.text = dict[sTitle];
         NSArray *keyPath = dict[sKeyPath];
         NSString *text = [requestDict objectForPath:keyPath];
-        cell.detailTextLabel.text = text;
+        cell.detailTextLabel.text = [text jsonDescription];
     }
     
     //    cell.detailTextLabel.text = dict[sMethod];
@@ -555,6 +559,7 @@ NSString *sValueWillChang = @"ValueWillChang";
                 NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 responseDict[vauthInfo] = dic;
                 [WebApi shareWebApi].accessToken = dic[faccessToken];
+                [self saveLocalDictData];
             }
         }
     }];
@@ -601,6 +606,7 @@ NSString *sValueWillChang = @"ValueWillChang";
                 NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 responseDict[vauthInfo] = dic;
                 [WebApi shareWebApi].accessToken = dic[faccessToken];
+                [self saveLocalDictData];
             }
         }
     }];
@@ -884,6 +890,7 @@ NSString *sValueWillChang = @"ValueWillChang";
         for (NSDictionary *device in devices) {
             UIAlertAction *action = [UIAlertAction actionWithTitle:device[fdeviceId] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 requestDict[fdeviceId] = device[fdeviceId];
+                [self saveDictData:requestDict forKey:vrequestDict];
                 [self addlog:[NSString stringWithFormat:@"SelectDevice:%@",device]];
             }];
             [alertC addAction:action];

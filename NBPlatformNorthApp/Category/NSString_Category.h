@@ -10,13 +10,8 @@
 
 @interface NSString (Category)
 
-@property (readonly) NSString *leftText;
-@property (readonly) NSString *rightText;
--(NSString *)setRightText:(NSString *)rightText;
-
 //字符串转成16进制
 @property (readonly) NSData *hexData;
 
--(NSString *)swapString;
 
 @end

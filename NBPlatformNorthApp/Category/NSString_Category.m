@@ -10,28 +10,6 @@
 
 @implementation NSString (Category)
 
--(NSString *)leftText{
-    NSRange range = [self rangeOfString:@"/"];
-    if (range.length > 0) {
-        return [self substringToIndex:range.location];
-    }else{
-        return self;
-    }
-}
-
--(NSString *)rightText{
-    
-    NSRange range = [self rangeOfString:@"/"];
-    if (range.length > 0) {
-        return [self substringFromIndex:range.location + 1];
-    }else{
-        return @"";
-    }
-}
-
--(NSString *)setRightText:(NSString *)rightText{
-    return [NSString stringWithFormat:@"%@/%@",self.leftText,rightText];
-}
 
 -(NSData *)hexData{
     NSUInteger len = [self length] / 2;    // Target length
@@ -52,12 +30,6 @@
     return data;
 }
 
--(NSString *)swapString{
-    NSMutableString *tmpStr = [NSMutableString string];
-    for (int i = 0; i < self.length/2; i++) {
-        [tmpStr appendFormat:@"%c%c",[self characterAtIndex:2*i + 1],[self characterAtIndex:2*i]];
-    }
-    return tmpStr;
-}
+
 
 @end
