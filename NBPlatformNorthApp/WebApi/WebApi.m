@@ -62,7 +62,13 @@
     NSLog(@"didBecomeInvalidWithError:%@",error);
 }
 
-
+-(NSUInteger)mainSystemVersion{
+    NSString *systemVersion = [UIDevice currentDevice].systemVersion;
+    NSRange range = [systemVersion rangeOfString:@"."];
+    NSString *sv = [systemVersion substringToIndex:range.location];
+    NSUInteger iv = [sv integerValue];
+    return iv;
+}
 /*
  CA证书   此证书用于校验 （此证书不需要包含私钥）
  ca.jks JKS格式证书，密码Huawei@123（JKS格式必须要有密码）
@@ -88,11 +94,8 @@
     
     NSURLProtectionSpace *protectionSpace = [challenge protectionSpace];
     NSString *authenticationMethod = [protectionSpace authenticationMethod];
-    NSString *systemVersion = [UIDevice currentDevice].systemVersion;
-    NSRange range = [systemVersion rangeOfString:@"."];
-    NSString *sv = [systemVersion substringToIndex:range.location];
-    NSUInteger iv = [sv integerValue];
-    BOOL bAfter9 = iv > 8;
+//    static BOOL bAfter9 = [self mainSystemVersion] > 8;
+    BOOL bNew = [self mainSystemVersion] >= 8 ;
     
     if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate])
     {
@@ -106,7 +109,7 @@
         
         if ( credential == nil )
         {
-            if(bAfter9){
+            if(bNew){
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge,nil);
             }else{
                 [[challenge sender] cancelAuthenticationChallenge:challenge];
@@ -115,7 +118,7 @@
         }
         else
         {
-            if(bAfter9){
+            if(bNew){
                 completionHandler(NSURLSessionAuthChallengeUseCredential, credential);// >=ios9
             }else{
                 [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];// <=ios8
@@ -132,7 +135,7 @@
 //        
         
         NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        if(bAfter9){
+        if(bNew){
             completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
         }else{
             [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
@@ -204,7 +207,7 @@
     else
     {
 //
-        if (bAfter9)
+        if (bNew)
             completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge,nil);
         else
             [[challenge sender] cancelAuthenticationChallenge:challenge];

@@ -12,8 +12,8 @@
 #import "JsonField.h"
 #import "NSArray_Category.h"
 #import "NSDictionary_Category.h"
-
-
+#import "DictionaryViewController.h"
+#import "NSDate_Category.h"
 
 //#define vResponse @"Response"
 #define vAuth @"Auth"
@@ -24,6 +24,7 @@
 #define vDeleteDevice  @"DeleteDevice"
 #define vSetApplication  @"SetApplication"
 #define vQueryAllDevice @"QueryAllDevice"
+#define vSelectDevice @"SelectDevice"
 #define vQueryDevice @"QueryDevice"
 #define vSubscribeDeviceChangeInfo  @"SubscribeDeviceChangeInfo"
 #define vDeviceDataHistory  @"DeviceDataHistory"
@@ -33,12 +34,12 @@
 #define vCancelCommand  @"CancelCommand"
 #define vUpdateCommand  @"UpdateCommand"
 
-NSString *sKeyPath = @"KeyPath";
-NSString *sTitle = @"Title";
-NSString *sMethod = @"Method";
-NSString *sItems = @"Items";
-NSString *sDefaultValue = @"DefaultValue";
-NSString *sValueWillChang = @"ValueWillChang";
+static NSString *sKeyPath = @"KeyPath";
+//static NSString *sTitle = @"Title";
+//static NSString *sMethod = @"Method";
+//static NSString *sItems = @"Items";
+//static NSString *sDefaultValue = @"DefaultValue";
+static NSString *sValueWillChang = @"ValueWillChang";
 
 
 @interface NSArray (apis)
@@ -125,7 +126,7 @@ NSString *sValueWillChang = @"ValueWillChang";
 @end
 
 
-@interface NBApisViewController ()<WebApiDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface NBApisViewController ()<WebApiDelegate,UITableViewDelegate,UITableViewDataSource,DictionaryViewControllerDelegate>
 {
     NSIndexPath *accessoryButtonTappedIndexPath;
 }
@@ -151,83 +152,86 @@ NSString *sValueWillChang = @"ValueWillChang";
     return @[
              @{sTitle : @"应用安全接入", sItems : @[
                        @{sTitle:@"鉴权",sMethod:@"Auth:",sItems:@[
-                                 @{sTitle:fappId,sMethod:@"Auth_appId:",sKeyPath:@[ fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a",sValueWillChang:@"Auth_appId_valueWillChang:"},
-                                 @{sTitle:fsecret,sMethod:@"Auth_secret:",sKeyPath:@[ fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
-                                 @{sTitle:vbaseUrl,sMethod:@"Auth_baseUrl:",sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"}
+                                 @{sTitle:fappId,sKeyPath:@[ fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a",sValueWillChang:@"Auth_appId_valueWillChang:"},
+                                 @{sTitle:fsecret,sKeyPath:@[ fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
+                                 @{sTitle:vbaseUrl,sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"}
                                  ]},
                        @{sTitle:@"刷新 token",sMethod:@"RefreshToken:"}]},
              @{sTitle:@"设备管理",sItems:@[
                        @{sTitle:@"注册设备",sMethod:@"RegisterDevice:",sItems:@[
-                                 @{sTitle:fverifyCode,sMethod:@"RegisterDevice_verifyCode:",sKeyPath:@[vRegisterDevice,fbody,fverifyCode]},
-                                 @{sTitle:fnodeId,sMethod:@"RegisterDevice_nodeId:",sKeyPath:@[vRegisterDevice,fbody,fnodeId]},
-                                 @{sTitle:fendUserId,sMethod:@"RegisterDevice_endUserId:",sKeyPath:@[vRegisterDevice,fbody,fendUserId]},
-                                 @{sTitle:ftimeout,sMethod:@"RegisterDevice_timeout:",sKeyPath:@[vRegisterDevice,fbody,ftimeout]}
+                                 @{sTitle:fverifyCode,sKeyPath:@[vRegisterDevice,fbody,fverifyCode]},
+                                 @{sTitle:fnodeId,sKeyPath:@[vRegisterDevice,fbody,fnodeId]},
+                                 @{sTitle:fendUserId,sKeyPath:@[vRegisterDevice,fbody,fendUserId]},
+                                 @{sTitle:ftimeout,sKeyPath:@[vRegisterDevice,fbody,ftimeout]}
                                  ]},
                        @{sTitle:@"设置设备信息",sMethod:@"SetDeviceInfo:",sItems:@[
-                                 @{sTitle:fname,sMethod:@"SetDeviceInfo_name:",sKeyPath:@[vSetDeviceInfo,fbody,fname]},
-                                 @{sTitle:fendUser,sMethod:@"SetDeviceInfo_endUser:",sKeyPath:@[vSetDeviceInfo,fbody,fendUser]},
-                                 @{sTitle:fmute,sMethod:@"SetDeviceInfo_mute:",sKeyPath:@[vSetDeviceInfo,fbody,fmute]},
-                                 @{sTitle:fmanufacturerId,sMethod:@"SetDeviceInfo_manufacturerId:",sKeyPath:@[vSetDeviceInfo,fbody,fmanufacturerId]},
-                                 @{sTitle:fmanufacturerName,sMethod:@"SetDeviceInfo_manufacturerName:",sKeyPath:@[vSetDeviceInfo,fbody,fmanufacturerName]},
-                                 @{sTitle:flocation,sMethod:@"SetDeviceInfo_location:",sKeyPath:@[vSetDeviceInfo,fbody,flocation]},
-                                 @{sTitle:fdeviceType,sMethod:@"SetDeviceInfo_deviceType:",sKeyPath:@[vSetDeviceInfo,fbody,fdeviceType]},
-                                 @{sTitle:fprotocolType,sMethod:@"SetDeviceInfo_protocolType:",sKeyPath:@[vSetDeviceInfo,fbody,fprotocolType]},
-                                 @{sTitle:fmodel,sMethod:@"SetDeviceInfo_model:",sKeyPath:@[vSetDeviceInfo,fbody,fmodel]}
+                                 @{sTitle:fname,sKeyPath:@[vSetDeviceInfo,fbody,fname]},
+                                 @{sTitle:fendUser,sKeyPath:@[vSetDeviceInfo,fbody,fendUser]},
+                                 @{sTitle:fmute,sKeyPath:@[vSetDeviceInfo,fbody,fmute]},
+                                 @{sTitle:fmanufacturerId,sKeyPath:@[vSetDeviceInfo,fbody,fmanufacturerId]},
+                                 @{sTitle:fmanufacturerName,sKeyPath:@[vSetDeviceInfo,fbody,fmanufacturerName]},
+                                 @{sTitle:flocation,sKeyPath:@[vSetDeviceInfo,fbody,flocation]},
+                                 @{sTitle:fdeviceType,sKeyPath:@[vSetDeviceInfo,fbody,fdeviceType]},
+                                 @{sTitle:fprotocolType,sKeyPath:@[vSetDeviceInfo,fbody,fprotocolType]},
+                                 @{sTitle:fmodel,sKeyPath:@[vSetDeviceInfo,fbody,fmodel]}
                                  ]},
                        @{sTitle:@"查询设备激活状态",sMethod:@"QueryDeviceActiveStatus:"},
                        @{sTitle:@"删除设备",sMethod:@"DeleteDevice:"},
                        @{sTitle:@"设置应用信息",sMethod:@"SetApplication:",sItems:@[
-                                 @{sTitle:fabnormalTime,sMethod:@"SetApplication_abnormalTime:",sKeyPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fabnormalTime]},
-                                 @{sTitle:fofflineTime,sMethod:@"SetApplication_offlineTime:",sKeyPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fofflineTime]}
+                                 @{sTitle:fabnormalTime,sKeyPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fabnormalTime]},
+                                 @{sTitle:fofflineTime,sKeyPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fofflineTime]}
                                  ]}
                        ]},
              @{sTitle:@"数据采集",sItems:@[
                        @{sTitle:@"批量查询设备信息",sMethod:@"QueryAllDevice:",sItems:@[
-                                 @{sTitle:fgatewayId,sMethod:@"QueryAllDevice_gatewayId:",sKeyPath:@[vQueryAllDevice,fgatewayId]},
-                                 @{sTitle:fnodeType,sMethod:@"QueryAllDevice_nodeType:",sKeyPath:@[vQueryAllDevice,fnodeType]},
-                                 @{sTitle:fpageNo,sMethod:@"QueryAllDevice_pageNo:",sKeyPath:@[vQueryAllDevice,fpageNo],sDefaultValue:@"0"},
-                                 @{sTitle:fpageSize,sMethod:@"QueryAllDevice_pageSize:",sKeyPath:@[vQueryAllDevice,fpageSize],sDefaultValue:@"100"},
-                                 @{sTitle:fstatus,sMethod:@"QueryAllDevice_status:",sKeyPath:@[vQueryAllDevice,fstatus]},
-                                 @{sTitle:fstartTime,sMethod:@"QueryAllDevice_startTime:",sKeyPath:@[vQueryAllDevice,fstartTime]},
-                                 @{sTitle:fendTime,sMethod:@"QueryAllDevice_endTime:",sKeyPath:@[vQueryAllDevice,fendTime]},
-                                 @{sTitle:fsort,sMethod:@"QueryAllDevice_sort:",sKeyPath:@[vQueryAllDevice,fsort]}
+                                 @{sTitle:fgatewayId,sKeyPath:@[vQueryAllDevice,fgatewayId]},
+                                 @{sTitle:fnodeType,sKeyPath:@[vQueryAllDevice,fnodeType]},
+                                 @{sTitle:fpageNo,sKeyPath:@[vQueryAllDevice,fpageNo],sDefaultValue:@"0"},
+                                 @{sTitle:fpageSize,sKeyPath:@[vQueryAllDevice,fpageSize],sDefaultValue:@"100"},
+                                 @{sTitle:fstatus,sKeyPath:@[vQueryAllDevice,fstatus]},
+                                 @{sTitle:fstartTime,sKeyPath:@[vQueryAllDevice,fstartTime]},
+                                 @{sTitle:fendTime,sKeyPath:@[vQueryAllDevice,fendTime]},
+                                 @{sTitle:fsort,sKeyPath:@[vQueryAllDevice,fsort]}
                                  ]},
-                       @{sTitle:@"选择设备",sMethod:@"SelectDevice:"},
+                       @{sTitle:@"选择设备",sMethod:@"SelectDevice:",sItems:@[
+                                 @{sTitle:@"地磁模式",sMethod:@"SelectDevice_MagnetMode:"},
+                                 @{sTitle:@"地锁模式",sMethod:@"SelectDevice_LockMode:"}
+                                 ]},
                        @{sTitle:@"查询单个设备信息",sMethod:@"QueryDevice:"},
                        @{sTitle:@"NA订阅CM的设备变更",sMethod:@"SubscribeDeviceChangeInfo:",sItems:@[
-                                 @{sTitle:fnotifyType,sMethod:@"SubscribeDeviceChangeInfo_notifyType:",sKeyPath:@[vSubscribeDeviceChangeInfo,fbody,fnotifyType]},
-                                 @{sTitle:fcallbackurl,sMethod:@"SubscribeDeviceChangeInfo_callbackurl:",sKeyPath:@[vSubscribeDeviceChangeInfo,fbody,fcallbackurl]}
+                                 @{sTitle:fnotifyType,sKeyPath:@[vSubscribeDeviceChangeInfo,fbody,fnotifyType]},
+                                 @{sTitle:fcallbackurl,sKeyPath:@[vSubscribeDeviceChangeInfo,fbody,fcallbackurl]}
                                  ]},
                        @{sTitle:@"查询设备历史数据",sMethod:@"DeviceDataHistory:",sItems:@[
-                                 @{sTitle:fgatewayId,sMethod:@"DeviceDataHistory_gatewayId:",sKeyPath:@[vDeviceDataHistory,fgatewayId]},
-                                 @{sTitle:fserviceId,sMethod:@"DeviceDataHistory_serviceId:",sKeyPath:@[vDeviceDataHistory,fserviceId]},
-                                 @{sTitle:fpageNo,sMethod:@"DeviceDataHistory_pageNo:",sKeyPath:@[vDeviceDataHistory,fpageNo]},
-                                 @{sTitle:fpageSize,sMethod:@"DeviceDataHistory_pageSize:",sKeyPath:@[vDeviceDataHistory,fpageSize]},
-                                 @{sTitle:fstartTime,sMethod:@"DeviceDataHistory_startTime:",sKeyPath:@[vDeviceDataHistory,fstartTime]},
-                                 @{sTitle:fendTime,sMethod:@"DeviceDataHistory_endTime:",sKeyPath:@[vDeviceDataHistory,fendTime]}
+//                                 @{sTitle:fgatewayId,sKeyPath:@[vDeviceDataHistory,fgatewayId]},
+                                 @{sTitle:fserviceId,sKeyPath:@[vDeviceDataHistory,fserviceId]},
+                                 @{sTitle:fpageNo,sKeyPath:@[vDeviceDataHistory,fpageNo],sDefaultValue:@"0"},
+                                 @{sTitle:fpageSize,sKeyPath:@[vDeviceDataHistory,fpageSize],sDefaultValue:@"5"},
+                                 @{sTitle:fstartTime,sKeyPath:@[vDeviceDataHistory,fstartTime]},
+                                 @{sTitle:fendTime,sKeyPath:@[vDeviceDataHistory,fendTime]}
                                  ]},
                        @{sTitle:@"查询设备的服务能力",sMethod:@"QueryDeviceCapability:"}
                        ]},
              @{sTitle:@"下发消息",sItems:@[
                        @{sTitle:@"向设备投递异步命令",sMethod:@"PostCommandToDevice:",sItems:@[
-                                 @{sTitle:frequestId,sMethod:@"PostCommandToDevice_requestId:",sKeyPath:@[vPostCommandToDevice,fbody, frequestId]},
-                                 @{sTitle:fserviceId,sMethod:@"PostCommandToDevice_command_serviceId:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"Parking"},
-                                 @{sTitle:fmethod,sMethod:@"PostCommandToDevice_command_method:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM"},
-                                 @{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:",sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@3}},
-                                 @{sTitle:fcallbackUrl,sMethod:@"PostCommandToDevice_callbackUrl:",sKeyPath:@[vPostCommandToDevice,fbody, fcallbackUrl]},
-                                 @{sTitle:fexpireTime,sMethod:@"PostCommandToDevice_expireTime:",sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
+                                 @{sTitle:frequestId,sKeyPath:@[vPostCommandToDevice,fbody, frequestId]},
+                                 @{sTitle:fserviceId,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"Parking"},
+                                 @{sTitle:fmethod,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM"},
+                                 @{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@1}},
+                                 @{sTitle:fcallbackUrl,sKeyPath:@[vPostCommandToDevice,fbody, fcallbackUrl]},
+                                 @{sTitle:fexpireTime,sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
                                  ]},
                        @{sTitle:@"查询异步命令",sMethod:@"QueryCommand:",sItems:@[
-                                 @{sTitle:fpageNo,sMethod:@"QueryCommand_pageNo:",sKeyPath:@[vQueryCommand,fpageNo]},
-                                 @{sTitle:fpageSize,sMethod:@"QueryCommand_pageSize:",sKeyPath:@[vQueryCommand,fpageSize]},
-                                 @{sTitle:fstartTime,sMethod:@"QueryCommand_startTime:",sKeyPath:@[vQueryCommand,fstartTime]},
-                                 @{sTitle:fendTime,sMethod:@"QueryCommand_endTime:",sKeyPath:@[vQueryCommand,fendTime]}
+                                 @{sTitle:fpageNo,sKeyPath:@[vQueryCommand,fpageNo]},
+                                 @{sTitle:fpageSize,sKeyPath:@[vQueryCommand,fpageSize]},
+                                 @{sTitle:fstartTime,sKeyPath:@[vQueryCommand,fstartTime]},
+                                 @{sTitle:fendTime,sKeyPath:@[vQueryCommand,fendTime]}
                                  ]},
                        @{sTitle:@"撤销异步命令",sMethod:@"CancelCommand:"},
                        @{sTitle:@"修改命令",sMethod:@"UpdateCommand:",sItems:@[
-                                 @{sTitle:fcommandId,sMethod:@"UpdateCommand_commandId:",sKeyPath:@[vUpdateCommand,fcommandId]},
-                                 @{sTitle:fresultCode,sMethod:@"UpdateCommand_result_resultCode:",sKeyPath:@[vUpdateCommand,fresult,fresultCode]},
-                                 @{sTitle:fresultDetail,sMethod:@"UpdateCommand_result_resultDetail:",sKeyPath:@[vUpdateCommand,fresult,fresultDetail]}
+                                 @{sTitle:fcommandId,sKeyPath:@[vUpdateCommand,fcommandId]},
+                                 @{sTitle:fresultCode,sKeyPath:@[vUpdateCommand,fresult,fresultCode]},
+                                 @{sTitle:fresultDetail,sKeyPath:@[vUpdateCommand,fresult,fresultDetail]}
                                  ]}
                        ]},
              @{sTitle:@"其它",sItems:@[
@@ -241,15 +245,20 @@ NSString *sValueWillChang = @"ValueWillChang";
 -(void)readLocalDictData{
     
     NSData *requestDictData = [[NSUserDefaults standardUserDefaults] objectForKey:vrequestDict];
-    requestDict = [NSJSONSerialization JSONObjectWithData:requestDictData options:NSJSONReadingAllowFragments error:nil];
-    requestDict = [requestDict deepMutableCopy];
+    if (requestDictData) {
+        requestDict = [NSJSONSerialization JSONObjectWithData:requestDictData options:NSJSONReadingAllowFragments error:nil];
+        requestDict = [requestDict deepMutableCopy];
+    }
     if (!requestDict) {
         requestDict = [NSMutableDictionary dictionary];
     }
     
     NSData *responseDictData = [[NSUserDefaults standardUserDefaults] objectForKey:vresponseDict];
-    responseDict = [NSJSONSerialization JSONObjectWithData:responseDictData options:NSJSONReadingAllowFragments error:nil];
-    responseDict = [responseDict deepMutableCopy];
+    if (responseDictData) {
+        responseDict = [NSJSONSerialization JSONObjectWithData:responseDictData options:NSJSONReadingAllowFragments error:nil];
+        responseDict = [responseDict deepMutableCopy];
+    }
+    
     if (!responseDict) {
         responseDict = [NSMutableDictionary dictionary];
     }
@@ -326,6 +335,7 @@ NSString *sValueWillChang = @"ValueWillChang";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//    NSLog(@"%s section=%d",__FUNCTION__,section);
     if (tableView == self.tableView) {
         NSArray *items = [funapis itemsForSection:section];
         return items.count;
@@ -339,6 +349,7 @@ NSString *sValueWillChang = @"ValueWillChang";
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"%s indexPath=%@",__FUNCTION__,indexPath);
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
@@ -359,7 +370,10 @@ NSString *sValueWillChang = @"ValueWillChang";
         NSDictionary *dict = [funapis dictionaryForRow:indexPath.row atIndexPath:accessoryButtonTappedIndexPath];
         cell.textLabel.text = dict[sTitle];
         NSArray *keyPath = dict[sKeyPath];
-        NSString *text = [requestDict objectForPath:keyPath];
+        NSString *text = nil;
+        if (keyPath) {
+            text = [requestDict objectForPath:keyPath];
+        }
         cell.detailTextLabel.text = [text jsonDescription];
     }
     
@@ -381,11 +395,8 @@ NSString *sValueWillChang = @"ValueWillChang";
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    df.dateFormat = @"yyyyMMdd HH:mm:ss";
-    NSString *str = [df stringFromDate:[NSDate date]];
     [self clearlog];
-    [self addlog:str];
+    [self addlog:[[NSDate date] myDateString]];
     
     NSDictionary *item = nil;
     if (tableView == self.tableView) {
@@ -395,9 +406,11 @@ NSString *sValueWillChang = @"ValueWillChang";
     }
     [self addlog:item[sTitle]];
     NSString *method = item[sMethod];
-    NSArray *keyPath = item[sKeyPath];
-    if (keyPath) {
-        method = @"modifyValueForDictionary:";
+    if (method == nil) {
+        NSArray *keyPath = item[sKeyPath];
+        if (keyPath) {
+            method = @"modifyValueForDictionary:";
+        }
     }
     SEL sel = NSSelectorFromString(method);
     if ([self respondsToSelector:sel]) {
@@ -457,7 +470,7 @@ NSString *sValueWillChang = @"ValueWillChang";
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         [mutableStr appendFormat:@"\nStatus Code:%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
-        [mutableStr appendFormat:@"\n%@",httpResponse.allHeaderFields];
+//        [mutableStr appendFormat:@"\n%@",httpResponse.allHeaderFields];
         if (data) {
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
             [mutableStr appendFormat:@"\nBody:\n%@",dic];
@@ -467,6 +480,47 @@ NSString *sValueWillChang = @"ValueWillChang";
     [self addlog:mutableStr];
 }
 
+#pragma mark - DictionaryViewControllerDelegate
+-(void)DictionaryViewController:(DictionaryViewController *)dictionaryViewController viewDidAppear:(BOOL)animated{
+    
+}
+-(void)DictionaryViewController:(DictionaryViewController *)dictionaryViewController viewDidDisappear:(BOOL)animated{
+    
+    
+}
+
+-(void)DictionaryViewController:(DictionaryViewController *)dictionaryViewController tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    if ([dictionaryViewController.title isEqualToString: @"地锁模式"]) {
+//        //@{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus]}
+//        NSDictionary *item = (NSDictionary *)[dictionaryViewController.showArray objectForIndexPath:indexPath];// [indexPath.section][sItems][indexPath.row];
+//        if ([item[sName] isEqualToString:fstatus]) {
+//            NSString *value = [item valueFromDictionary:dictionaryViewController.showData];
+//            
+//        }
+//        
+//    }
+}
+
+-(void)DictionaryViewController:(DictionaryViewController *)dictionaryViewController AlertController:(UIAlertController *)alertController AlertAction:(UIAlertAction *)alertAction forItem:(NSDictionary *)item{
+    if ([dictionaryViewController.title isEqualToString:@"地锁模式"]) {
+        if ([item[sName] isEqualToString:fstatus]) {
+            
+            NSMutableDictionary *Info = [[requestDict mutableDictionaryForKey:vPostCommandToDevice] mutableCopy];
+            Info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
+            NSDictionary *parasDict = nil;
+            if ([alertAction.title isEqualToString:@"open"]) {
+                parasDict = @{@"lockStatus":@1};
+            }else if ([alertAction.title isEqualToString:@"close"]){
+                parasDict = @{@"lockStatus":@0};
+            }
+            Info[fbody][fcommand][fparas] = parasDict;
+            //@{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@1}},
+            [[WebApi shareWebApi] PostCommandToDevice:Info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                
+            }];
+        }
+    }
+}
 #pragma mark - tools
 //-(void)resetWebApi{
 //}
@@ -492,19 +546,6 @@ NSString *sValueWillChang = @"ValueWillChang";
     [self presentViewController:alertC animated:YES completion:nil];
 }
 
--(void)inputAlertWithTitle:(NSString *)title forDic:(NSMutableDictionary *)dic forPath:(NSArray *)path{
-//    [self alertWithTitle:title text:[dic objectForPath:path] handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [dic setObject:text forPath:path];
-//        if (dic == appInfoDict){
-//            [[NSUserDefaults standardUserDefaults] setObject:dic forKey:vappInfoDict];
-//        }else if (dic == requestDict){
-//            [[NSUserDefaults standardUserDefaults] setObject:dic forKey:vrequestDict];
-//        }else if (dic == responseDict){
-//            [[NSUserDefaults standardUserDefaults] setObject:dic forKey:vresponseDict];
-//        }
-//    }];
-}
 
 -(void)modifyValueForDictionary:(NSDictionary *)dict{
     NSLog(@"%s",__FUNCTION__);
@@ -541,9 +582,7 @@ NSString *sValueWillChang = @"ValueWillChang";
     [self presentViewController:alertC animated:YES completion:nil];
 }
 
--(void)inputAlertWithTitle:(NSString *)title forRequestDicPath:(NSArray *)path{
-//    [self inputAlertWithTitle:title forDic:requestDict forPath:path];
-}
+
 
 
 #pragma mark - 应用安全接入
@@ -574,20 +613,6 @@ NSString *sValueWillChang = @"ValueWillChang";
 }
 
 
-/*
-//@{sTitle:fappId,sMethod:@"Auth_appId:"},
--(void)Auth_appId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fappId forDic:requestDict forPath:@[fappId]];
-}
-//@{sTitle:fsecret,sMethod:@"Auth_secret:"},
--(void)Auth_secret:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fsecret forDic:requestDict forPath:@[fsecret]];
-}
-//@{sTitle:vbaseUrl,sMethod:@"Auth_baseUrl"}
--(void)Auth_baseUrl:(NSDictionary *)dic{
-    [self inputAlertWithTitle:vbaseUrl forDic:requestDict forPath:@[vbaseUrl]];
-}
-*/
 
 -(void)RefreshToken:(NSDictionary *)dic{
     NSString *refreshToken = responseDict[vauthInfo][frefreshToken];
@@ -622,41 +647,8 @@ NSString *sValueWillChang = @"ValueWillChang";
         
     }];
 }
-/*
-//@{sTitle:fverifyCode,sMethod:@"RegisterDevice_verifyCode:"},
--(void)RegisterDevice_verifyCode:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fverifyCode forRequestDicPath:@[vRegisterDevice,fbody,fverifyCode]];
-}
-//@{sTitle:fnodeId,sMethod:@"RegisterDevice_nodeId"},
--(void)RegisterDevice_nodeId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fverifyCode forRequestDicPath:@[vRegisterDevice,fbody,fnodeId]];
-    
-//    NSArray *path = @[vRegisterDevice,fnodeId];
-//    [self alertWithTitle:fnodeId text:[requestDict objectForPath:path] handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:path];
-//    }];
-    
-}
-//@{sTitle:fendUserId,sMethod:@"RegisterDevice_endUserId"},
--(void)RegisterDevice_endUserId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fendUserId forRequestDicPath:@[vRegisterDevice,fbody,fendUserId]];
-//    [self alertWithTitle:fendUserId text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vRegisterDevice,fendUserId]];
-//    }];
-    
-}
-//@{sTitle:ftimeout,sMethod:@"RegisterDevice_timeout"}
--(void)RegisterDevice_timeout:(NSDictionary *)dic{
-    [self inputAlertWithTitle:ftimeout forRequestDicPath:@[vRegisterDevice,fbody,ftimeout]];
-//    [self alertWithTitle:ftimeout text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vRegisterDevice,ftimeout]];
-//    }];
-    
-}
-*/
+
+
 //@{sTitle:@"设置设备信息",sMethod:@"SetDeviceInfo:"},
 -(void)SetDeviceInfo:(NSDictionary *)dic{
     NSDictionary *info = requestDict[vSetDeviceInfo];
@@ -664,93 +656,11 @@ NSString *sValueWillChang = @"ValueWillChang";
         
     }];
 }
-/*
-//@{sTitle:fname,sMethod:@"SetDeviceInfo_name:"},
--(void)SetDeviceInfo_name:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fname forRequestDicPath:@[vSetDeviceInfo,fbody,fname]];
-//    [self alertWithTitle:fname text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fname]];
-//    }];
-    
-}
-//@{sTitle:fendUser,sMethod:@"SetDeviceInfo_endUser:"},
--(void)SetDeviceInfo_endUser:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fendUser forRequestDicPath:@[vSetDeviceInfo,fbody,fendUser]];
-//    [self alertWithTitle:fendUser text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fendUser]];
-//    }];
-    
-}
-//@{sTitle:fmute,sMethod:@"SetDeviceInfo_mute:"},
--(void)SetDeviceInfo_mute:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fmute forRequestDicPath:@[vSetDeviceInfo,fbody,fmute]];
-//    [self alertWithTitle:fmute text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fmute]];
-//    }];
-    
-}
-//@{sTitle:fmanufacturerId,sMethod:@"SetDeviceInfo_manufacturerId:"},
--(void)SetDeviceInfo_manufacturerId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fmanufacturerId forRequestDicPath:@[vSetDeviceInfo,fbody,fmanufacturerId]];
-//    [self alertWithTitle:fmanufacturerId text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fmanufacturerId]];
-//    }];
-    
-}
-//@{sTitle:fmanufacturerName,sMethod:@"SetDeviceInfo_manufacturerName:"},
--(void)SetDeviceInfo_manufacturerName:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fmanufacturerName forRequestDicPath:@[vSetDeviceInfo,fbody,fmanufacturerName]];
-//    [self alertWithTitle:fmanufacturerName text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fmanufacturerName]];
-//    }];
-    
-}
-//@{sTitle:flocation,sMethod:@"SetDeviceInfo_location:"},
--(void)SetDeviceInfo_location:(NSDictionary *)dic{
-    [self inputAlertWithTitle:flocation forRequestDicPath:@[vSetDeviceInfo,fbody,flocation]];
-//    [self alertWithTitle:flocation text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,flocation]];
-//    }];
-    
-}
-//@{sTitle:fdeviceType,sMethod:@"SetDeviceInfo_deviceType:"},
--(void)SetDeviceInfo_deviceType:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fdeviceType forRequestDicPath:@[vSetDeviceInfo,fbody,fdeviceType]];
-//    [self alertWithTitle:fdeviceType text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fdeviceType]];
-//    }];
-    
-}
-//@{sTitle:fprotocolType,sMethod:@"SetDeviceInfo_protocolType:"},
--(void)SetDeviceInfo_protocolType:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fprotocolType forRequestDicPath:@[vSetDeviceInfo,fbody,fprotocolType]];
-//    [self alertWithTitle:fprotocolType text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fprotocolType]];
-//    }];
-    
-}
-//@{sTitle:fmodel,sMethod:@"SetDeviceInfo_model:"}
--(void)SetDeviceInfo_model:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fmodel forRequestDicPath:@[vSetDeviceInfo,fbody,fmodel]];
-//    [self alertWithTitle:fmodel text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict setObject:text forPath:@[vSetDeviceInfo,fmodel]];
-//    }];
-    
-}
-*/
+
 //@{sTitle:@"查询设备激活状态",sMethod:@"QueryDeviceActiveStatus:"},
 -(void)QueryDeviceActiveStatus:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vQueryDeviceActiveStatus];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     [[WebApi shareWebApi] QueryDeviceActiveStatus:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
@@ -758,7 +668,7 @@ NSString *sValueWillChang = @"ValueWillChang";
 //@{sTitle:@"删除设备",sMethod:@"DeleteDevice:"},
 -(void)DeleteDevice:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vDeleteDevice];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     info[fappId] = requestDict[fappId];
     [[WebApi shareWebApi] DeleteDevice:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
@@ -772,16 +682,8 @@ NSString *sValueWillChang = @"ValueWillChang";
         
     }];
 }
-/*
-//@{sTitle:fabnormalTime,sMethod:@"SetApplication_abnormalTime:"},
--(void)SetApplication_abnormalTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fabnormalTime forRequestDicPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fabnormalTime]];
-}
-//@{sTitle:fofflineTime,sMethod:@"SetApplication_offlineTime:"}
--(void)SetApplication_offlineTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fofflineTime forRequestDicPath:@[vSetApplication,fbody,fdeviceStatusTimeConfig,fofflineTime]];
-}
-*/
+
+
 #pragma mark - 数据采集
 
 //@{sTitle:@"批量查询设备信息",sMethod:@"QueryAllDevice:",sItems:@[
@@ -803,82 +705,7 @@ NSString *sValueWillChang = @"ValueWillChang";
     }];
     
 }
-/*
-//@{sTitle:@"gatewayId",sMethod:@"QueryAllDevice_gatewayId:"},
--(void)QueryAllDevice_gatewayId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fgatewayId forRequestDicPath:@[vQueryAllDevice,fgatewayId]];
-//    [self alertWithTitle:fnodeType text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fgatewayId] = text;
-//    }];
-    
-}
 
-//@{sTitle:@"nodeType",sMethod:@"QueryAllDevice_nodeType:"},
--(void)QueryAllDevice_nodeType:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fnodeType forRequestDicPath:@[vQueryAllDevice,fnodeType]];
-//    [self alertWithTitle:fnodeType text:@"ALL" handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fnodeType] = text;
-//    }];
-    
-}
-
-//@{sTitle:@"pageNo",sMethod:@"QueryAllDevice_pageNo"},
--(void)QueryAllDevice_pageNo:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageNo forRequestDicPath:@[vQueryAllDevice,fpageNo]];
-//    [self alertWithTitle:fpageNo text:@"0" handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fpageNo] = text;
-//    }];
-    
-}
-//@{sTitle:@"pageSize",sMethod:@"QueryAllDevice_pageSize"},
--(void)QueryAllDevice_pageSize:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageSize forRequestDicPath:@[vQueryAllDevice,fpageSize]];
-//    [self alertWithTitle:fpageSize text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fpageSize] = text;
-//    }];
-    
-}
-//@{sTitle:@"status",sMethod:@"QueryAllDevice_status"},
--(void)QueryAllDevice_status:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fstatus forRequestDicPath:@[vQueryAllDevice,fstatus]];
-//    [self alertWithTitle:fstatus text:@"ALL" handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fstatus] = text;
-//    }];
-    
-}
-//@{sTitle:@"startTime",sMethod:@"QueryAllDevice_startTime"},
--(void)QueryAllDevice_startTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fstartTime forRequestDicPath:@[vQueryAllDevice,fstartTime]];
-//    [self alertWithTitle:fstartTime text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fstartTime] = text;
-//    }];
-    
-}
-//@{sTitle:@"endTime",sMethod:@"QueryAllDevice_endTime"},
--(void)QueryAllDevice_endTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fendTime forRequestDicPath:@[vQueryAllDevice,fendTime]];
-//    [self alertWithTitle:fendTime text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fendTime] = text;
-//    }];
-//    
-}
-//@{sTitle:@"sort",sMethod:@"QueryAllDevice_sort"}
--(void)QueryAllDevice_sort:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fsort forRequestDicPath:@[vQueryAllDevice,fsort]];
-//    [self alertWithTitle:fsort text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryAllDevice][fsort] = text;
-//    }];
-    
-}
-*/
 
 //@{sTitle:@"选择设备",sMethod:@"SelectDevice:"},
 -(void)SelectDevice:(NSDictionary *)dic{
@@ -889,7 +716,7 @@ NSString *sValueWillChang = @"ValueWillChang";
         
         for (NSDictionary *device in devices) {
             UIAlertAction *action = [UIAlertAction actionWithTitle:device[fdeviceId] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                requestDict[fdeviceId] = device[fdeviceId];
+                requestDict[vSelectDevice] = device;
                 [self saveDictData:requestDict forKey:vrequestDict];
                 [self addlog:[NSString stringWithFormat:@"SelectDevice:%@",device]];
             }];
@@ -902,9 +729,115 @@ NSString *sValueWillChang = @"ValueWillChang";
     }
 
 }
+
+-(void)SelectDevice_MagnetMode:(NSDictionary *)dic{
+    DictionaryViewController *dicVC = [DictionaryViewController shareDictionaryViewController];
+//    dicVC.showInfo = @{}
+    dicVC.title = @"地磁模式";
+    dicVC.showData = nil;
+    dicVC.showArray =  @[
+                         @{sTitle:@"数据信息",
+                           sItems:@[
+                                   @{sName:fappId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fappId]},
+                                   @{sName:fdeviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdeviceId]},
+                                   @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
+                                   @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
+                                   @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
+                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus]}
+                                   ]
+                           },
+                         @{sTitle:@"通讯信息",
+                           sItems:@[
+                                   @{sName:@"Status Code",sValuePath:@[@"statusCode"]},
+                                   @{sName:@"通讯时间",sValuePath:@[@"requestTime"]}
+                                   ]
+                           }
+                         ];
+    dicVC.delegate = self;
+    [self.navigationController showViewController:dicVC sender:self];
+    [self SelectDevice_MagnetMode_refresh:dicVC];
+
+    
+}
+//地磁模式刷新数据
+
+-(void)SelectDevice_Mode_refresh:(DictionaryViewController *)dicVC completionHandler:(CompletionHandler)completionHandler{
+    
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
+    info[fgatewayId] = requestDict[vSelectDevice][fgatewayId];
+    info[fserviceId] = @"Parking";
+    info[fpageNo] = @"0";
+    info[fpageSize] = @"1";
+    [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            NSMutableDictionary *mutableDic = [dicVC.showData mutableCopy];
+            mutableDic[@"statusCode"] = [error localizedDescription];
+            mutableDic[@"requestTime"] = [[NSDate date] myDateString];
+            dicVC.showData = mutableDic;
+            [dicVC.tableView reloadData];
+        }
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            if (data) {
+                NSMutableDictionary *mutableDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                mutableDic[@"statusCode"] = [NSString stringWithFormat:@"%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
+                mutableDic[@"requestTime"] = [[NSDate date] myDateString];
+                dicVC.showData = mutableDic;
+                [dicVC.tableView reloadData];
+            }
+        }
+        completionHandler(data,response,error);
+    }];
+}
+
+-(void)SelectDevice_MagnetMode_refresh:(DictionaryViewController *)dicVC{
+    [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if (dicVC.navigationController.topViewController == dicVC) {
+            [self performSelector:@selector(SelectDevice_MagnetMode_refresh:) withObject:dicVC afterDelay:1];
+        }
+    }];
+}
+
+-(void)SelectDevice_LockMode:(NSDictionary *)dic{
+    DictionaryViewController *dicVC = [DictionaryViewController shareDictionaryViewController];
+    dicVC.title = @"地锁模式";
+    dicVC.showData = nil;
+    dicVC.showArray =  @[
+                         @{sTitle:@"数据信息",
+                           sItems:@[
+                                   @{sName:fappId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fappId]},
+                                   @{sName:fdeviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdeviceId]},
+                                   @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
+                                   @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
+                                   @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
+                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"open",@"close"],sValueMap:@{@"0":@"关闭",@"1":@"打开"}}
+                                   ]
+                           },
+                         @{sTitle:@"通讯信息",
+                           sItems:@[
+                                   @{sName:@"Status Code",sValuePath:@[@"statusCode"]},
+                                   @{sName:@"通讯时间",sValuePath:@[@"requestTime"]}
+                                   ]
+                           }
+                         ];
+    dicVC.delegate = self;
+    [self.navigationController showViewController:dicVC sender:self];
+    [self SelectDevice_LockMode_refresh:dicVC];
+    
+}
+
+-(void)SelectDevice_LockMode_refresh:(DictionaryViewController *)dicVC{
+    [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+    }];
+    
+}
+
 //@{sTitle:@"查询单个设备信息",sMethod:@"QueryDevice:"},
 -(void)QueryDevice:(NSDictionary *)dic{
-    NSDictionary *info = @{fdeviceId: requestDict[fdeviceId],fappId:requestDict[fappId]};
+    NSDictionary *info = @{fdeviceId: requestDict[vSelectDevice][fdeviceId],fappId:requestDict[fappId]};
     
     [[WebApi shareWebApi] QueryDevice:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
@@ -918,54 +851,21 @@ NSString *sValueWillChang = @"ValueWillChang";
         
     }];
 }
-/*
-//@{sTitle:fnotifyType,sMethod:@"SubscribeDeviceChangeInfo_notifyType"},
--(void)SubscribeDeviceChangeInfo_notifyType:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fnotifyType forRequestDicPath:@[vSubscribeDeviceChangeInfo,fbody,fnotifyType]];
-}
-//@{sTitle:fcallbackurl,sMethod:@"SubscribeDeviceChangeInfo_callbackurl"}
--(void)SubscribeDeviceChangeInfo_callbackurl:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fcallbackurl forRequestDicPath:@[vSubscribeDeviceChangeInfo,fbody,fcallbackurl]];
-}
-*/
+
 //@{sTitle:@"查询设备历史数据",sMethod:@"DeviceDataHistory:"},
 -(void)DeviceDataHistory:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vDeviceDataHistory];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
+    info[fgatewayId] = requestDict[vSelectDevice][fgatewayId];
     [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
 }
-/*
-//@{sTitle:fgatewayId,sMethod:@"DeviceDataHistory_gatewayId:"},
--(void)DeviceDataHistory_gatewayId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fgatewayId forRequestDicPath:@[vDeviceDataHistory,fgatewayId]];
-}
-//@{sTitle:fserviceId,sMethod:@"DeviceDataHistory_serviceId:"},
--(void)DeviceDataHistory_serviceId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fserviceId forRequestDicPath:@[vDeviceDataHistory,fserviceId]];
-}
-//@{sTitle:fpageNo,sMethod:@"DeviceDataHistory_pageNo:"},
--(void)DeviceDataHistory_pageNo:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageNo forRequestDicPath:@[vDeviceDataHistory,fpageNo]];
-}
-//@{sTitle:fpageSize,sMethod:@"DeviceDataHistory_pageSize:"},
--(void)DeviceDataHistory_pageSize:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageSize forRequestDicPath:@[vDeviceDataHistory,fpageSize]];
-}
-//@{sTitle:fstartTime,sMethod:@"DeviceDataHistory_startTime:"},
--(void)DeviceDataHistory_startTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fstartTime forRequestDicPath:@[vDeviceDataHistory,fstartTime]];
-}
-//@{sTitle:fendTime,sMethod:@"DeviceDataHistory_endTime:"}
--(void)DeviceDataHistory_endTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fendTime forRequestDicPath:@[vDeviceDataHistory,fendTime]];
-}
-*/
+
 //@{sTitle:@"查询设备的服务能力",sMethod:@"QueryDeviceCapability:"}
 -(void)QueryDeviceCapability:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey: vQueryDeviceCapability];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     [[WebApi shareWebApi] QueryDeviceCapability:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
@@ -976,108 +876,27 @@ NSString *sValueWillChang = @"ValueWillChang";
 //@{sTitle:@"向设备投递异步命令",sMethod:@"PostCommandToDevice:"},
 -(void)PostCommandToDevice:(NSDictionary *)dic{
     NSMutableDictionary *Info = [requestDict mutableDictionaryForKey:vPostCommandToDevice];
-    Info[fdeviceId] = requestDict[fdeviceId];
+    Info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     
     [[WebApi shareWebApi] PostCommandToDevice:Info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
 }
-/*
-//@{sTitle:frequestId,sMethod:@"PostCommandToDevice_requestId:"},
--(void)PostCommandToDevice_requestId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:frequestId forRequestDicPath:@[vPostCommandToDevice,fbody, frequestId]];
-    
-//    [self alertWithTitle:frequestId text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice][frequestId] = text;
-//    }];
-    
-}
-//@{sTitle:fserviceId,sMethod:@"PostCommandToDevice_command_serviceId:"},
--(void)PostCommandToDevice_command_serviceId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fserviceId forRequestDicPath:@[vPostCommandToDevice,fbody,fcommand,fserviceId]];
-    
-//    [self alertWithTitle:fserviceId text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice andKey:fcommand][fserviceId] = text;
-//    }];
-    
-}
-//@{sTitle:fmethod,sMethod:@"PostCommandToDevice_command_method:"},
--(void)PostCommandToDevice_command_method:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fmethod forRequestDicPath:@[vPostCommandToDevice,fbody,fcommand,fmethod]];
-    
-    //    [self alertWithTitle:fmethod text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice andKey:fcommand][fmethod] = text;
-//    }];
-    
-}
-//@{sTitle:fparas,sMethod:@"PostCommandToDevice_command_paras:"},
--(void)PostCommandToDevice_command_paras:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fparas forRequestDicPath:@[vPostCommandToDevice,fbody,fcommand,fparas]];
-    
-//    [self alertWithTitle:fparas text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice andKey:fcommand][fparas] = text;
-//    }];
-    
-}
-//@{sTitle:fcallbackUrl,sMethod:@"PostCommandToDevice_callbackUrl:"},
--(void)PostCommandToDevice_callbackUrl:(NSDictionary *)dic{
-    
-    [self inputAlertWithTitle:fcallbackUrl forRequestDicPath:@[vPostCommandToDevice,fbody,fcallbackUrl]];
-    
-//    [self alertWithTitle:fcallbackUrl text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice][fcallbackUrl] = text;
-//    }];
-    
-}
-//@{sTitle:fexpireTime,sMethod:@"PostCommandToDevice_expireTime:"},
--(void)PostCommandToDevice_expireTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fexpireTime forRequestDicPath:@[vPostCommandToDevice,fbody,fexpireTime]];
-    
-//    [self alertWithTitle:fexpireTime text:nil handler:^(UIAlertController *alertC, UIAlertAction *action) {
-//        NSString *text = alertC.textFields[0].text;
-//        [requestDict mutableDictionaryForKey:vQueryDevice][fexpireTime] = text;
-//    }];
-    
-}
-*/
+
 
 //@{sTitle:@"查询异步命令",sMethod:@"QueryCommand:"},
 -(void)QueryCommand:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey:vQueryCommand];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     
     [[WebApi shareWebApi] QueryCommand:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
 }
-/*
-//@{sTitle:fpageNo,sMethod:@"QueryCommand_pageNo:"},
--(void)QueryCommand_pageNo:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageNo forRequestDicPath:@[vQueryCommand,fpageNo]];
-}
-//@{sTitle:fpageSize,sMethod:@"QueryCommand_pageSize:"},
--(void)QueryCommand_pageSize:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fpageSize forRequestDicPath:@[vQueryCommand,fpageSize]];
-}
 
-//@{sTitle:fstartTime,sMethod:@"QueryCommand_startTime:"},
--(void)QueryCommand_startTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fstartTime forRequestDicPath:@[vQueryCommand,fstartTime]];
-}
-
-//@{sTitle:fendTime,sMethod:@"QueryCommand_endTime:"}
--(void)QueryCommand_endTime:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fendTime forRequestDicPath:@[vQueryCommand,fendTime]];
-}
-*/
 //@{sTitle:@"撤销异步命令",sMethod:@"CancelCommand:"},
 -(void)CancelCommand:(NSDictionary *)dic{
-    NSDictionary *info = @{fbody:@{fdeviceId:requestDict[fdeviceId]}};
+    NSDictionary *info = @{fbody:@{fdeviceId:requestDict[vSelectDevice][fdeviceId]}};
     
     [[WebApi shareWebApi] CancelCommand:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
@@ -1086,27 +905,14 @@ NSString *sValueWillChang = @"ValueWillChang";
 //@{sTitle:@"修改命令",sMethod:@"UpdateCommand:"}
 -(void)UpdateCommand:(NSDictionary *)dic{
     NSMutableDictionary *info = [requestDict mutableDictionaryForKey: vUpdateCommand];
-    info[fdeviceId] = requestDict[fdeviceId];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     info[fcommandId] = requestDict[fcommandId];
     
     [[WebApi shareWebApi] UpdateCommand:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
     }];
 }
-/*
-//@{sTitle:fcommandId,sMethod:@"UpdateCommand_commandId:"},
--(void)UpdateCommand_commandId:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fcommandId forRequestDicPath:@[vUpdateCommand,fcommandId]];
-}
-//@{sTitle:fresultCode,sMethod:@"UpdateCommand_result_resultCode:"},
--(void)UpdateCommand_result_resultCode:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fresultCode forRequestDicPath:@[vUpdateCommand,fresult,fresultCode]];
-}
-//@{sTitle:fresultDetail,sMethod:@"UpdateCommand_result_resultDetail:"}
--(void)UpdateCommand_result_resultDetail:(NSDictionary *)dic{
-    [self inputAlertWithTitle:fresultDetail forRequestDicPath:@[vUpdateCommand,fresult,fresultDetail]];
-}
-*/
+
 #pragma mark - 其它
 
 //@{sTitle:@"恢复默认配置",sMethod:@"RestoreDefaultDict:"},

@@ -15,6 +15,17 @@
 #define vrequestDict @"requestDict"
 #define vresponseDict @"responseDict"
 
+#define  sTitle  @"Title"
+#define  sMethod  @"Method"
+#define  sItems  @"Items"
+#define  sName  @"Name"
+#define  sValue  @"Value"
+#define  sValuePath  @"ValuePath"
+#define  sDefaultValue  @"DefaultValue"
+#define  sOptions @"Options"
+#define  sValueMap @"ValueMap"
+
+
 //记录应用信息
 //extern NSMutableDictionary *appInfoDict;
 
@@ -42,3 +53,25 @@ extern NSMutableDictionary *responseDict;
 -(id)objectForPath:(NSArray *)path;
 
 @end
+
+@interface NSDictionary (ValuePath)
+
+-(NSObject *)valueFromDictionary:(NSDictionary *)valueDict;
+-(NSString *)mapValueFromDictionary:(NSDictionary *)valueDit;
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

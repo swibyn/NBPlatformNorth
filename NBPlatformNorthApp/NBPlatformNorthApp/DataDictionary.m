@@ -50,13 +50,59 @@ NSMutableDictionary *responseDict = nil;
 -(id)objectForPath:(NSArray *)path{
     id dic = self;
     for (int i = 0; i < path.count; i++) {
-        dic = dic[path[i]];
+//        NSLog(@"path[%d]=%@",i,path[i]);
+        id key = path[i];
+        if ([key isKindOfClass:[NSNumber class]]) {
+            int index = [key intValue];
+            dic = dic[index];
+        }else{
+            dic = dic[key];
+        }
+//        NSString *str = [dic description];
+//        int len = str.length > 20 ? 20 : str.length;
+//        NSLog(@"dic=%@",[str substringToIndex:len]);
     }
     return dic;
 }
 
 
+@end
 
+@implementation NSDictionary (ValuePath)
+
+-(NSObject *)valueFromDictionary:(NSDictionary *)valueDict  {
+    
+    NSObject *value = self[sValue];
+    if (!value) {
+        NSArray *valuePath = self[sValuePath];
+        if (valuePath) {
+            value = [valueDict objectForPath:valuePath];
+        }
+    }
+    return value;
+}
+
+-(NSObject *)mapValueFromDictionary:(NSDictionary *)valueDit{
+    NSObject *value = [self valueFromDictionary:valueDit];
+    NSString *mapValue;
+    NSDictionary *mapdict = self[sValueMap];
+    if (mapdict) {
+        mapValue = mapdict[value];
+    }
+    if (!mapValue) {
+        mapValue = @"";
+    }
+    return mapValue;
+}
 
 @end
+
+
+
+
+
+
+
+
+
 

@@ -92,6 +92,7 @@
 #define fdeviceDataHistoryDTOs @"deviceDataHistoryDTOs"
 #define fserviceId @"serviceId"
 #define ftimestamp @"timestamp"
+#define fdata @"data"
 
 //查询设备的服务能力
 #define fdeviceCapabilities @"deviceCapabilities"
