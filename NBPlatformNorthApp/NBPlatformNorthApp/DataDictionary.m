@@ -84,10 +84,17 @@ NSMutableDictionary *responseDict = nil;
 
 -(NSObject *)mapValueFromDictionary:(NSDictionary *)valueDit{
     NSObject *value = [self valueFromDictionary:valueDit];
+    NSString *key = nil;
+    if ([value isKindOfClass:[NSObject class]]) {
+        key = [value description];
+    }else{
+        key = [NSString stringWithFormat:@"%@",value];
+    }
+    
     NSString *mapValue;
     NSDictionary *mapdict = self[sValueMap];
     if (mapdict) {
-        mapValue = mapdict[value];
+        mapValue = mapdict[key];
     }
     if (!mapValue) {
         mapValue = @"";

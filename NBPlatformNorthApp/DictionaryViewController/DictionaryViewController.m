@@ -33,11 +33,11 @@
     // Do any additional setup after loading the view from its nib.
 }
 
--(void)dealloc{
-    if (self.timer) {
-        [self.timer invalidate];
-    }
-}
+//-(void)dealloc{
+//    if (self.timer) {
+//        [self.timer invalidate];
+//    }
+//}
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];

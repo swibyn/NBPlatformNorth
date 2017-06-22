@@ -19,6 +19,15 @@
 		4D64CFB21EFA68AC00C32EC8 /* NSDate_Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D64CFB11EFA68AC00C32EC8 /* NSDate_Category.m */; };
 		4DD2C2621EF90BE10062A5CF /* DictionaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD2C2601EF90BE10062A5CF /* DictionaryViewController.m */; };
 		4DD2C2631EF90BE10062A5CF /* DictionaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD2C2611EF90BE10062A5CF /* DictionaryViewController.xib */; };
+		4DE6E6361EFB6A8600376B98 /* LogsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6E62F1EFB6A8600376B98 /* LogsTableViewController.m */; };
+		4DE6E6371EFB6A8600376B98 /* LogsTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6E6301EFB6A8600376B98 /* LogsTableViewController.xib */; };
+		4DE6E6381EFB6A8600376B98 /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6E6321EFB6A8600376B98 /* LogViewController.m */; };
+		4DE6E6391EFB6A8600376B98 /* LogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6E6331EFB6A8600376B98 /* LogViewController.xib */; };
+		4DE6E63A1EFB6A8600376B98 /* NSDictionary+FileExtend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6E6351EFB6A8600376B98 /* NSDictionary+FileExtend.m */; };
+		4DE6E63D1EFB6AB800376B98 /* KKLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6E63C1EFB6AB800376B98 /* KKLog.m */; };
+		4DE6E6431EFB6EC700376B98 /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6E63F1EFB6EC700376B98 /* about.html */; };
+		4DE6E6441EFB6EC700376B98 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6E6411EFB6EC700376B98 /* AboutViewController.m */; };
+		4DE6E6451EFB6EC700376B98 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6E6421EFB6EC700376B98 /* AboutViewController.xib */; };
 		4DFBF8A11ED3DD9E0066848E /* ApisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DFBF89F1ED3DD9E0066848E /* ApisViewController.m */; };
 		4DFBF8A21ED3DD9E0066848E /* ApisViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DFBF8A01ED3DD9E0066848E /* ApisViewController.xib */; };
 		4DFBF8A51ED3DDBF0066848E /* NBApisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DFBF8A41ED3DDBF0066848E /* NBApisViewController.m */; };
@@ -50,6 +59,20 @@
 		4DD2C25F1EF90BE10062A5CF /* DictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryViewController.h; path = DictionaryViewController/DictionaryViewController.h; sourceTree = "<group>"; };
 		4DD2C2601EF90BE10062A5CF /* DictionaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryViewController.m; path = DictionaryViewController/DictionaryViewController.m; sourceTree = "<group>"; };
 		4DD2C2611EF90BE10062A5CF /* DictionaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DictionaryViewController.xib; path = DictionaryViewController/DictionaryViewController.xib; sourceTree = "<group>"; };
+		4DE6E62E1EFB6A8600376B98 /* LogsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogsTableViewController.h; sourceTree = "<group>"; };
+		4DE6E62F1EFB6A8600376B98 /* LogsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogsTableViewController.m; sourceTree = "<group>"; };
+		4DE6E6301EFB6A8600376B98 /* LogsTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogsTableViewController.xib; sourceTree = "<group>"; };
+		4DE6E6311EFB6A8600376B98 /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
+		4DE6E6321EFB6A8600376B98 /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
+		4DE6E6331EFB6A8600376B98 /* LogViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogViewController.xib; sourceTree = "<group>"; };
+		4DE6E6341EFB6A8600376B98 /* NSDictionary+FileExtend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+FileExtend.h"; sourceTree = "<group>"; };
+		4DE6E6351EFB6A8600376B98 /* NSDictionary+FileExtend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+FileExtend.m"; sourceTree = "<group>"; };
+		4DE6E63B1EFB6AB800376B98 /* KKLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKLog.h; sourceTree = "<group>"; };
+		4DE6E63C1EFB6AB800376B98 /* KKLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKLog.m; sourceTree = "<group>"; };
+		4DE6E63F1EFB6EC700376B98 /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
+		4DE6E6401EFB6EC700376B98 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		4DE6E6411EFB6EC700376B98 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		4DE6E6421EFB6EC700376B98 /* AboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		4DFBF89E1ED3DD9E0066848E /* ApisViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApisViewController.h; sourceTree = "<group>"; };
 		4DFBF89F1ED3DD9E0066848E /* ApisViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApisViewController.m; sourceTree = "<group>"; };
 		4DFBF8A01ED3DD9E0066848E /* ApisViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ApisViewController.xib; sourceTree = "<group>"; };
@@ -79,9 +102,9 @@
 		4D17702E1ED2EA4800144CA7 = {
 			isa = PBXGroup;
 			children = (
-				4DD2C25F1EF90BE10062A5CF /* DictionaryViewController.h */,
-				4DD2C2601EF90BE10062A5CF /* DictionaryViewController.m */,
-				4DD2C2611EF90BE10062A5CF /* DictionaryViewController.xib */,
+				4DE6E63E1EFB6EC700376B98 /* About */,
+				4DE6E62D1EFB6A8600376B98 /* Logs */,
+				4DE6E62C1EFB656A00376B98 /* DictionaryViewController */,
 				4DFBF8A61ED3DE740066848E /* Category */,
 				4DFBF89D1ED3DD9E0066848E /* ApisViewController */,
 				4D17707B1ED2EBB600144CA7 /* WebApi */,
@@ -135,6 +158,44 @@
 				4D1770801ED2EBD500144CA7 /* outgoing.CertwithKey.pkcs12 */,
 			);
 			path = WebApi;
+			sourceTree = "<group>";
+		};
+		4DE6E62C1EFB656A00376B98 /* DictionaryViewController */ = {
+			isa = PBXGroup;
+			children = (
+				4DD2C25F1EF90BE10062A5CF /* DictionaryViewController.h */,
+				4DD2C2601EF90BE10062A5CF /* DictionaryViewController.m */,
+				4DD2C2611EF90BE10062A5CF /* DictionaryViewController.xib */,
+			);
+			name = DictionaryViewController;
+			sourceTree = "<group>";
+		};
+		4DE6E62D1EFB6A8600376B98 /* Logs */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6E63B1EFB6AB800376B98 /* KKLog.h */,
+				4DE6E63C1EFB6AB800376B98 /* KKLog.m */,
+				4DE6E62E1EFB6A8600376B98 /* LogsTableViewController.h */,
+				4DE6E62F1EFB6A8600376B98 /* LogsTableViewController.m */,
+				4DE6E6301EFB6A8600376B98 /* LogsTableViewController.xib */,
+				4DE6E6311EFB6A8600376B98 /* LogViewController.h */,
+				4DE6E6321EFB6A8600376B98 /* LogViewController.m */,
+				4DE6E6331EFB6A8600376B98 /* LogViewController.xib */,
+				4DE6E6341EFB6A8600376B98 /* NSDictionary+FileExtend.h */,
+				4DE6E6351EFB6A8600376B98 /* NSDictionary+FileExtend.m */,
+			);
+			path = Logs;
+			sourceTree = "<group>";
+		};
+		4DE6E63E1EFB6EC700376B98 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6E63F1EFB6EC700376B98 /* about.html */,
+				4DE6E6401EFB6EC700376B98 /* AboutViewController.h */,
+				4DE6E6411EFB6EC700376B98 /* AboutViewController.m */,
+				4DE6E6421EFB6EC700376B98 /* AboutViewController.xib */,
+			);
+			path = About;
 			sourceTree = "<group>";
 		};
 		4DFBF89D1ED3DD9E0066848E /* ApisViewController */ = {
@@ -226,10 +287,14 @@
 			files = (
 				4DD2C2631EF90BE10062A5CF /* DictionaryViewController.xib in Resources */,
 				4D10150D1ED40FE200E50C82 /* outgoing.CertwithKey.pkcs12 in Resources */,
+				4DE6E6371EFB6A8600376B98 /* LogsTableViewController.xib in Resources */,
 				4D17704A1ED2EA4800144CA7 /* LaunchScreen.storyboard in Resources */,
+				4DE6E6451EFB6EC700376B98 /* AboutViewController.xib in Resources */,
 				4D1770471ED2EA4800144CA7 /* Assets.xcassets in Resources */,
 				4D1770451ED2EA4800144CA7 /* Main.storyboard in Resources */,
+				4DE6E6431EFB6EC700376B98 /* about.html in Resources */,
 				4DFBF8A21ED3DD9E0066848E /* ApisViewController.xib in Resources */,
+				4DE6E6391EFB6A8600376B98 /* LogViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DE6E6441EFB6EC700376B98 /* AboutViewController.m in Sources */,
 				4DFBF8B11ED3DE740066848E /* NSDictionary_Category.m in Sources */,
 				4D64CFB21EFA68AC00C32EC8 /* NSDate_Category.m in Sources */,
 				4D1770421ED2EA4800144CA7 /* ViewController.m in Sources */,
@@ -248,10 +314,14 @@
 				4DFBF8B01ED3DE740066848E /* NSData_Category.m in Sources */,
 				4DFBF8AF1ED3DE740066848E /* NSArray_Category.m in Sources */,
 				4DFBF8B21ED3DE740066848E /* NSString_Category.m in Sources */,
+				4DE6E6361EFB6A8600376B98 /* LogsTableViewController.m in Sources */,
 				4DFBF8A51ED3DDBF0066848E /* NBApisViewController.m in Sources */,
 				4D17703C1ED2EA4800144CA7 /* main.m in Sources */,
+				4DE6E63D1EFB6AB800376B98 /* KKLog.m in Sources */,
+				4DE6E6381EFB6A8600376B98 /* LogViewController.m in Sources */,
 				4DFBF8A11ED3DD9E0066848E /* ApisViewController.m in Sources */,
 				4D17707F1ED2EBB600144CA7 /* WebApi.m in Sources */,
+				4DE6E63A1EFB6A8600376B98 /* NSDictionary+FileExtend.m in Sources */,
 				4D1770901ED2EC9300144CA7 /* DataDictionary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

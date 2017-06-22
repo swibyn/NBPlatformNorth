@@ -29,10 +29,10 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
-@property NSDictionary *showInfo;
+//@property NSDictionary *showInfo;
 @property NSDictionary *showData;
 @property NSArray *showArray;
-@property NSTimer *timer;
+//@property NSTimer *timer;
 
 @property id<DictionaryViewControllerDelegate> delegate;
 

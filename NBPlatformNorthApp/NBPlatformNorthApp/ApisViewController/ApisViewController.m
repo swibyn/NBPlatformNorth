@@ -7,7 +7,7 @@
 //
 
 #import "ApisViewController.h"
-
+#import "KKLog.h"
 
 @interface ApisViewController ()
 {
@@ -52,6 +52,7 @@
 }
 -(void)addlog:(NSString *)logText{
     NSLog(@"%@",logText);
+    KKNSLog(logText);
     self.textView.text = [NSString stringWithFormat:@"%@\n%@",self.textView.text, logText];
 }
 

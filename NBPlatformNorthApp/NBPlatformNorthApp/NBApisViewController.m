@@ -222,8 +222,8 @@ static NSString *sValueWillChang = @"ValueWillChang";
                                  @{sTitle:fexpireTime,sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
                                  ]},
                        @{sTitle:@"查询异步命令",sMethod:@"QueryCommand:",sItems:@[
-                                 @{sTitle:fpageNo,sKeyPath:@[vQueryCommand,fpageNo]},
-                                 @{sTitle:fpageSize,sKeyPath:@[vQueryCommand,fpageSize]},
+                                 @{sTitle:fpageNo,sKeyPath:@[vQueryCommand,fpageNo],sDefaultValue:@"0"},
+                                 @{sTitle:fpageSize,sKeyPath:@[vQueryCommand,fpageSize],sDefaultValue:@"5"},
                                  @{sTitle:fstartTime,sKeyPath:@[vQueryCommand,fstartTime]},
                                  @{sTitle:fendTime,sKeyPath:@[vQueryCommand,fendTime]}
                                  ]},
@@ -508,15 +508,38 @@ static NSString *sValueWillChang = @"ValueWillChang";
             NSMutableDictionary *Info = [[requestDict mutableDictionaryForKey:vPostCommandToDevice] mutableCopy];
             Info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
             NSDictionary *parasDict = nil;
+            NSString *operation = nil;
             if ([alertAction.title isEqualToString:@"open"]) {
                 parasDict = @{@"lockStatus":@1};
+                operation = @"开锁";
             }else if ([alertAction.title isEqualToString:@"close"]){
                 parasDict = @{@"lockStatus":@0};
+                operation = @"关锁";
             }
             Info[fbody][fcommand][fparas] = parasDict;
             //@{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@1}},
             [[WebApi shareWebApi] PostCommandToDevice:Info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                
+                DictionaryViewController *dicVC = dictionaryViewController;
+                if (error) {
+                    NSMutableDictionary *mutableDic = [dicVC.showData mutableCopy];
+                    mutableDic[@"statusCode"] = [error localizedDescription];
+                    mutableDic[@"requestTime"] = [[NSDate date] myDateString];
+                    dicVC.showData = mutableDic;
+                    [dicVC.tableView reloadData];
+                }
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+//                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    if (data) {
+//                        NSMutableDictionary *mutableDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                        
+                        NSMutableDictionary *mutableDic = [dicVC.showData mutableCopy];
+                        mutableDic[@"statusCode"] = @"指令发送成功";//[NSString stringWithFormat:@"%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
+                        mutableDic[@"requestTime"] = [[NSDate date] myDateString];
+                        dicVC.showData = mutableDic;
+                        [dicVC.tableView reloadData];
+                    }
+                }
+//                completionHandler(data,response,error);
             }];
         }
     }
@@ -576,6 +599,31 @@ static NSString *sValueWillChang = @"ValueWillChang";
         
     }];
     [alertC addAction:action];
+    
+    NSObject *defaultValue = dict[sDefaultValue];
+    if (defaultValue) {
+        UIAlertAction *action = [UIAlertAction actionWithTitle:[defaultValue jsonDescription] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            NSString *text = alertC.textFields[0].text;
+            NSObject *jsonobj = defaultValue;//[text jsonObjectLike:currentValue];
+            NSString *valueWillChang = dict[sValueWillChang];
+            if (valueWillChang) {
+                SEL sel = NSSelectorFromString(valueWillChang);
+                if ([self respondsToSelector:sel]){
+                    IMP imp = [self methodForSelector:sel];
+                    void (*func)(id,SEL,NSObject *) = (void *)imp;
+                    func(self, sel, jsonobj);
+                }
+            }
+            
+            [requestDict setObject:jsonobj forPath:keyPath];
+            [self.tableViewDetail reloadData];
+            [self saveLocalDictData];
+            
+        }];
+        [alertC addAction:action];
+
+    }
+    
     
     action = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     [alertC addAction:action];
@@ -743,7 +791,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
                                    @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
                                    @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
                                    @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
-                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus]}
+                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sValueMap:@{@"0":@"无车",@"1":@"有车"}}
                                    ]
                            },
                          @{sTitle:@"通讯信息",
@@ -795,7 +843,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
     [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if (dicVC.navigationController.topViewController == dicVC) {
-            [self performSelector:@selector(SelectDevice_MagnetMode_refresh:) withObject:dicVC afterDelay:1];
+            [self performSelector:@selector(SelectDevice_MagnetMode_refresh:) withObject:dicVC afterDelay:2];
         }
     }];
 }
@@ -812,7 +860,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
                                    @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
                                    @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
                                    @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
-                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"open",@"close"],sValueMap:@{@"0":@"关闭",@"1":@"打开"}}
+                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"open",@"close"],sValueMap:@{@"16":@"正常",@"17":@"报警"}}
                                    ]
                            },
                          @{sTitle:@"通讯信息",
@@ -830,7 +878,9 @@ static NSString *sValueWillChang = @"ValueWillChang";
 
 -(void)SelectDevice_LockMode_refresh:(DictionaryViewController *)dicVC{
     [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
+        if (dicVC.navigationController.topViewController == dicVC) {
+            [self performSelector:@selector(SelectDevice_LockMode_refresh:) withObject:dicVC afterDelay:5];
+        }
     }];
     
 }

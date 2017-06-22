@@ -10,6 +10,9 @@
 #import "DataDictionary.h"
 #import "JsonField.h"
 
+#import "KKLog.h"
+
+
 @interface AppDelegate ()
 
 @end
@@ -17,14 +20,16 @@
 @implementation AppDelegate
 
 
+void uncaughtExceptionHandler(NSException *exception)
+{
+    [KKLog logCrash:exception];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
-//    appInfoDict = [NSMutableDictionary dictionary];
-//    requestDict = [NSMutableDictionary dictionary];
-//    responseDict = [NSMutableDictionary dictionary];
-    
-    
+
+    [KKLog logIntial];
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     return YES;
 }
