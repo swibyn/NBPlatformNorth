@@ -51,7 +51,6 @@
     self.textView.text = nil;
 }
 -(void)addlog:(NSString *)logText{
-    NSLog(@"%@",logText);
     KKNSLog(logText);
     self.textView.text = [NSString stringWithFormat:@"%@\n%@",self.textView.text, logText];
 }

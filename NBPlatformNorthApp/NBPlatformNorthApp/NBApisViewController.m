@@ -187,7 +187,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
                                  @{sTitle:fgatewayId,sKeyPath:@[vQueryAllDevice,fgatewayId]},
                                  @{sTitle:fnodeType,sKeyPath:@[vQueryAllDevice,fnodeType]},
                                  @{sTitle:fpageNo,sKeyPath:@[vQueryAllDevice,fpageNo],sDefaultValue:@"0"},
-                                 @{sTitle:fpageSize,sKeyPath:@[vQueryAllDevice,fpageSize],sDefaultValue:@"100"},
+                                 @{sTitle:fpageSize,sKeyPath:@[vQueryAllDevice,fpageSize],sDefaultValue:@"10"},
                                  @{sTitle:fstatus,sKeyPath:@[vQueryAllDevice,fstatus]},
                                  @{sTitle:fstartTime,sKeyPath:@[vQueryAllDevice,fstartTime]},
                                  @{sTitle:fendTime,sKeyPath:@[vQueryAllDevice,fendTime]},
@@ -533,7 +533,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
 //                        NSMutableDictionary *mutableDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                         
                         NSMutableDictionary *mutableDic = [dicVC.showData mutableCopy];
-                        mutableDic[@"statusCode"] = @"指令发送成功";//[NSString stringWithFormat:@"%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
+                        mutableDic[@"statusCode"] = [NSString stringWithFormat:@"%@ %@",operation, @"指令发送成功"];//[NSString stringWithFormat:@"%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]];
                         mutableDic[@"requestTime"] = [[NSDate date] myDateString];
                         dicVC.showData = mutableDic;
                         [dicVC.tableView reloadData];
@@ -748,6 +748,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
                 NSError *error;
                 NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 responseDict[vQueryAllDevice] = dic;
+                [self saveLocalDictData];
             }
         }
     }];
@@ -879,7 +880,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
 -(void)SelectDevice_LockMode_refresh:(DictionaryViewController *)dicVC{
     [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (dicVC.navigationController.topViewController == dicVC) {
-            [self performSelector:@selector(SelectDevice_LockMode_refresh:) withObject:dicVC afterDelay:5];
+//            [self performSelector:@selector(SelectDevice_LockMode_refresh:) withObject:dicVC afterDelay:5];
         }
     }];
     

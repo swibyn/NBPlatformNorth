@@ -49,12 +49,17 @@ NSMutableDictionary *responseDict = nil;
 
 -(id)objectForPath:(NSArray *)path{
     id dic = self;
+//    NSLog(@"self: %@",self);
     for (int i = 0; i < path.count; i++) {
 //        NSLog(@"path[%d]=%@",i,path[i]);
         id key = path[i];
         if ([key isKindOfClass:[NSNumber class]]) {
             int index = [key intValue];
-            dic = dic[index];
+            if ([dic count] > index) {
+                dic = dic[index];
+            }else{
+                return nil;// dic = dic[index];
+            }
         }else{
             dic = dic[key];
         }
