@@ -38,7 +38,7 @@ static NSString *sKeyPath = @"KeyPath";
 //static NSString *sTitle = @"Title";
 //static NSString *sMethod = @"Method";
 //static NSString *sItems = @"Items";
-//static NSString *sDefaultValue = @"DefaultValue";
+static NSString *sDefaultValue = @"DefaultValue";
 static NSString *sValueWillChang = @"ValueWillChang";
 
 
@@ -154,7 +154,8 @@ static NSString *sValueWillChang = @"ValueWillChang";
                        @{sTitle:@"鉴权",sMethod:@"Auth:",sItems:@[
                                  @{sTitle:fappId,sKeyPath:@[ fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a",sValueWillChang:@"Auth_appId_valueWillChang:"},
                                  @{sTitle:fsecret,sKeyPath:@[ fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
-                                 @{sTitle:vbaseUrl,sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"}
+                                 @{sTitle:vbaseUrl,sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"},
+                                 @{sTitle:@"Account",sMethod:@"SelectAccount:"}
                                  ]},
                        @{sTitle:@"刷新 token",sMethod:@"RefreshToken:"}]},
              @{sTitle:@"设备管理",sItems:@[
@@ -215,9 +216,9 @@ static NSString *sValueWillChang = @"ValueWillChang";
              @{sTitle:@"下发消息",sItems:@[
                        @{sTitle:@"向设备投递异步命令",sMethod:@"PostCommandToDevice:",sItems:@[
                                  @{sTitle:frequestId,sKeyPath:@[vPostCommandToDevice,fbody, frequestId]},
-                                 @{sTitle:fserviceId,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"Parking"},
-                                 @{sTitle:fmethod,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM"},
-                                 @{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@1}},
+                                 @{sTitle:fserviceId,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fserviceId],sDefaultValue:@"LockStatus",sMethod:@"PostCommandToDevice_serviceId:"},
+                                 @{sTitle:fcommandName,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fmethod],sDefaultValue:@"SET_LOCK_PARAM",sMethod:@"PostCommandToDevice_commandName:"},
+                                 @{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"value":@1},sMethod:@"PostCommandToDevice_paras:"},
                                  @{sTitle:fcallbackUrl,sKeyPath:@[vPostCommandToDevice,fbody, fcallbackUrl]},
                                  @{sTitle:fexpireTime,sKeyPath:@[vPostCommandToDevice,fbody, fexpireTime],sDefaultValue:@"100"}
                                  ]},
@@ -477,6 +478,9 @@ static NSString *sValueWillChang = @"ValueWillChang";
             
         }
     }
+    if(error){
+        [mutableStr appendFormat:@"%@",error];
+    }
     [self addlog:mutableStr];
 }
 
@@ -509,12 +513,12 @@ static NSString *sValueWillChang = @"ValueWillChang";
             Info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
             NSDictionary *parasDict = nil;
             NSString *operation = nil;
-            if ([alertAction.title isEqualToString:@"open"]) {
-                parasDict = @{@"lockStatus":@1};
-                operation = @"开锁";
-            }else if ([alertAction.title isEqualToString:@"close"]){
-                parasDict = @{@"lockStatus":@0};
-                operation = @"关锁";
+            if ([alertAction.title isEqualToString:@"up"]) {
+                parasDict = @{@"value":@1};
+                operation = @"升锁";
+            }else if ([alertAction.title isEqualToString:@"down"]){
+                parasDict = @{@"value":@0};
+                operation = @"降锁";
             }
             Info[fbody][fcommand][fparas] = parasDict;
             //@{sTitle:fparas,sKeyPath:@[vPostCommandToDevice,fbody, fcommand,fparas],sDefaultValue:@{@"lockStatus":@1}},
@@ -652,14 +656,41 @@ static NSString *sValueWillChang = @"ValueWillChang";
     }];
 }
 
--(void)Auth_appId_valueWillChanged:(NSObject *)newValue{
+-(void)Auth_appId_valueWillChang:(NSObject *)newValue{
     [WebApi shareWebApi].appId = (NSString *)newValue;
 }
 
--(void)Auth_baseUrl_valueWillChanged:(NSObject *)newValue{
+-(void)Auth_baseUrl_valueWillChang:(NSObject *)newValue{
     [WebApi shareWebApi].baseUrl = (NSString *)newValue;
 }
 
+-(void)SelectAccount:(NSDictionary *)dic{
+    NSArray *accountArray = @[@{sTitle:@"地锁账户",
+                                fappId:@"WeVaYuAJufmg7Po989DkfvpD1q0a",
+                                fsecret:@"TS1UCHWOTIi3mg3F9xaQqEPbMuga"
+                                },
+                              @{sTitle:@"地磁账户",
+                                fappId:@"G6I0CJfYoVveYYaZdm9EMtaY46ca",
+                                fsecret:@"yuhtoKs1JEvGaHKWy5br0zHqXA0a"
+                                }
+                              ];
+    
+    
+    UIAlertController *alertC = [UIAlertController alertControllerWithTitle:dic[sTitle] message:nil preferredStyle:UIAlertControllerStyleAlert];
+    for (NSDictionary *dic in accountArray) {
+        
+        [alertC addAction:[UIAlertAction actionWithTitle:dic[sTitle] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            requestDict[fappId] = dic[fappId];
+            [self Auth_appId_valueWillChang:dic[fappId]];
+            requestDict[fsecret] =dic[fsecret];
+            [self.tableViewDetail reloadData];
+            
+        }]];
+    }
+    
+    [self presentViewController:alertC animated:YES completion:nil];
+    
+}
 
 
 -(void)RefreshToken:(NSDictionary *)dic{
@@ -815,7 +846,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
     info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     info[fgatewayId] = requestDict[vSelectDevice][fgatewayId];
-    info[fserviceId] = @"Parking";
+    info[fserviceId] = @"LockStatus";
     info[fpageNo] = @"0";
     info[fpageSize] = @"1";
     [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -861,7 +892,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
                                    @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
                                    @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
                                    @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
-                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"open",@"close"],sValueMap:@{@"16":@"正常",@"17":@"报警"}}
+                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"up",@"down"],sValueMap:@{@"0":@"降",@"1":@"升"}}
                                    ]
                            },
                          @{sTitle:@"通讯信息",
@@ -880,7 +911,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
 -(void)SelectDevice_LockMode_refresh:(DictionaryViewController *)dicVC{
     [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (dicVC.navigationController.topViewController == dicVC) {
-//            [self performSelector:@selector(SelectDevice_LockMode_refresh:) withObject:dicVC afterDelay:5];
+            [self performSelector:@selector(SelectDevice_LockMode_refresh:) withObject:dicVC afterDelay:5];
         }
     }];
     
@@ -919,6 +950,19 @@ static NSString *sValueWillChang = @"ValueWillChang";
     info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
     [[WebApi shareWebApi] QueryDeviceCapability:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
+        
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+            
+            NSHTTPURLResponse *httpres = (NSHTTPURLResponse *)response;
+            if ((httpres.statusCode == 200)&& (data.length > 0)){
+                NSError *error;
+                NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+                responseDict[vQueryDeviceCapability] = dic;
+                [self saveLocalDictData];
+            }
+        }
+
+        
     }];
 }
 
@@ -934,6 +978,56 @@ static NSString *sValueWillChang = @"ValueWillChang";
     }];
 }
 
+static NSDictionary* serviceCapabilitieDic;
+static NSDictionary* commandDic;
+
+-(void)PostCommandToDevice_serviceId:(NSDictionary *)dic{
+    NSDictionary *serviceCapabilities = responseDict[vQueryDeviceCapability][fdeviceCapabilities][0][fserviceCapabilities];
+    
+    UIAlertController *alertC = [UIAlertController alertControllerWithTitle:fserviceId message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    for (NSDictionary* serviceCapabilitie in serviceCapabilities) {
+        [alertC addAction:[UIAlertAction actionWithTitle:serviceCapabilitie[fserviceId] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            serviceCapabilitieDic = serviceCapabilitie;
+            NSObject *jsonobj = serviceCapabilitie[fserviceId];
+            
+            NSArray *keyPath = dic[sKeyPath];
+            [requestDict setObject:jsonobj forPath:keyPath];
+            [self.tableViewDetail reloadData];
+            [self saveLocalDictData];
+
+        }]];
+    }
+    [self presentViewController:alertC animated:YES completion:nil];
+    
+}
+
+-(void)PostCommandToDevice_commandName:(NSDictionary *)dic{
+    NSArray *commands = serviceCapabilitieDic[fcommands];
+    
+    UIAlertController *alertC = [UIAlertController alertControllerWithTitle:fcommandName message:nil preferredStyle:UIAlertControllerStyleAlert];
+    for (NSDictionary *command in commands) {
+        [alertC addAction:[UIAlertAction actionWithTitle:command[fcommandName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            commandDic = command;
+            NSObject *jsonobj = command[fcommandName];
+            
+            NSArray *keyPath = dic[sKeyPath];
+            [requestDict setObject:jsonobj forPath:keyPath];
+            [self.tableViewDetail reloadData];
+            [self saveLocalDictData];
+            
+        }]];
+    }
+    [self presentViewController:alertC animated:YES completion:nil];
+    
+}
+
+-(void)PostCommandToDevice_paras:(NSDictionary *)dic{
+    
+    NSArray *paras = commandDic[fparas];
+    [self addlog:[paras description]];
+    [self modifyValueForDictionary:dic];
+}
 
 //@{sTitle:@"查询异步命令",sMethod:@"QueryCommand:"},
 -(void)QueryCommand:(NSDictionary *)dic{

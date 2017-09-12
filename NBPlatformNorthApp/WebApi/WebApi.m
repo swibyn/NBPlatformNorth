@@ -310,7 +310,7 @@
 -(NSMutableURLRequest *)mutableRequestWithUrl:(NSString *)subURL httpMethod:(NSString *)httpMethod dic:(NSDictionary *)dic{
     //request
     NSString *urlStr = [_baseUrl stringByAppendingString:subURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData  timeoutInterval:5.0];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData  timeoutInterval:10.0];
     request.HTTPMethod = httpMethod;
     
     //header
@@ -472,7 +472,6 @@
 
 //查询设备历史数据
 -(void)DeviceDataHistory:(NSDictionary *)dic completionHandler:(CompletionHandler)completionHandler{
-    
     NSString *parama = [dic stringValuesWithKeys:@[fdeviceId,fgatewayId,fserviceId,fpageNo,fpageSize,fstartTime,fendTime] andSeparate:@"&"];
     
     NSString *url = [NSString stringWithFormat:@"/iocm/app/data/v1.1.0/deviceDataHistory?%@",parama];

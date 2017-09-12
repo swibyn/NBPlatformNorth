@@ -21,7 +21,7 @@
 #define  sName  @"Name"
 #define  sValue  @"Value"
 #define  sValuePath  @"ValuePath"
-#define  sDefaultValue  @"DefaultValue"
+//#define  sDefaultValue  @"DefaultValue"
 #define  sOptions @"Options"
 #define  sValueMap @"ValueMap"
 
