@@ -62,6 +62,20 @@ extern NSMutableDictionary *responseDict;
 @end
 
 
+@interface NSArray (apis)
+
+-(NSMutableArray *)itemsForSection:(NSInteger)section;
+-(NSString *)titleForSection:(NSInteger)section;
+
+-(NSMutableDictionary *)dictionaryForIndexPath:(NSIndexPath *)indexPath;
+
+-(NSMutableArray *)itemsForIndexPath:(NSIndexPath *)indexPath;
+
+-(NSMutableDictionary *)dictionaryForRow:(NSInteger)row atIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
+
 
 
 

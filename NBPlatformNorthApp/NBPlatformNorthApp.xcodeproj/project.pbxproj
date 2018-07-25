@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D0A48E71F67B72300C6F81A /* DeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0A48E61F67B72300C6F81A /* DeviceViewController.m */; };
 		4D10150D1ED40FE200E50C82 /* outgoing.CertwithKey.pkcs12 in Resources */ = {isa = PBXBuildFile; fileRef = 4D1770801ED2EBD500144CA7 /* outgoing.CertwithKey.pkcs12 */; };
 		4D17703C1ED2EA4800144CA7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D17703B1ED2EA4800144CA7 /* main.m */; };
 		4D17703F1ED2EA4800144CA7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D17703E1ED2EA4800144CA7 /* AppDelegate.m */; };
@@ -38,6 +39,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D0A48E51F67B72300C6F81A /* DeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceViewController.h; sourceTree = "<group>"; };
+		4D0A48E61F67B72300C6F81A /* DeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceViewController.m; sourceTree = "<group>"; };
 		4D1770371ED2EA4800144CA7 /* NBPlatformNorthApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBPlatformNorthApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D17703B1ED2EA4800144CA7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4D17703D1ED2EA4800144CA7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -204,6 +207,8 @@
 				4DFBF89E1ED3DD9E0066848E /* ApisViewController.h */,
 				4DFBF89F1ED3DD9E0066848E /* ApisViewController.m */,
 				4DFBF8A01ED3DD9E0066848E /* ApisViewController.xib */,
+				4D0A48E51F67B72300C6F81A /* DeviceViewController.h */,
+				4D0A48E61F67B72300C6F81A /* DeviceViewController.m */,
 			);
 			name = ApisViewController;
 			path = NBPlatformNorthApp/ApisViewController;
@@ -308,6 +313,7 @@
 				4DE6E6441EFB6EC700376B98 /* AboutViewController.m in Sources */,
 				4DFBF8B11ED3DE740066848E /* NSDictionary_Category.m in Sources */,
 				4D64CFB21EFA68AC00C32EC8 /* NSDate_Category.m in Sources */,
+				4D0A48E71F67B72300C6F81A /* DeviceViewController.m in Sources */,
 				4D1770421ED2EA4800144CA7 /* ViewController.m in Sources */,
 				4DD2C2621EF90BE10062A5CF /* DictionaryViewController.m in Sources */,
 				4D17703F1ED2EA4800144CA7 /* AppDelegate.m in Sources */,

@@ -13,6 +13,7 @@
 #import "NSArray_Category.h"
 #import "NSDictionary_Category.h"
 #import "DictionaryViewController.h"
+#import "DeviceViewController.h"
 #import "NSDate_Category.h"
 
 //#define vResponse @"Response"
@@ -42,46 +43,6 @@ static NSString *sDefaultValue = @"DefaultValue";
 static NSString *sValueWillChang = @"ValueWillChang";
 
 
-@interface NSArray (apis)
-
--(NSMutableArray *)itemsForSection:(NSInteger)section;
--(NSString *)titleForSection:(NSInteger)section;
-
-@end
-
-@implementation NSArray (apis)
-
--(NSMutableArray *)itemsForSection:(NSInteger)section{
-    NSDictionary *dict = self[section];
-    NSMutableArray *array = dict[sItems];
-    return array;
-}
-
--(NSString *)titleForSection:(NSInteger)section{
-    NSDictionary *dict = self[section];
-    NSString *title = dict[sTitle];
-    return title;
-}
-
--(NSMutableDictionary *)dictionaryForIndexPath:(NSIndexPath *)indexPath{
-    NSArray *array = [self itemsForSection:indexPath.section];
-    NSMutableDictionary *dict = array[indexPath.row];
-    return dict;
-}
-
--(NSMutableArray *)itemsForIndexPath:(NSIndexPath *)indexPath{
-    NSMutableDictionary *dict = [self dictionaryForIndexPath:indexPath];
-    NSMutableArray *items = dict[sItems];
-    return items;
-}
-
--(NSMutableDictionary *)dictionaryForRow:(NSInteger)row atIndexPath:(NSIndexPath *)indexPath{
-    NSArray *array = [self itemsForIndexPath:indexPath];
-    NSMutableDictionary *dict = array[row];
-    return dict;
-}
-
-@end
 
 @interface NSObject (jsonDescription)
 
@@ -126,7 +87,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
 @end
 
 
-@interface NBApisViewController ()<WebApiDelegate,UITableViewDelegate,UITableViewDataSource,DictionaryViewControllerDelegate>
+@interface NBApisViewController ()<WebApiDelegate,UITableViewDelegate,UITableViewDataSource,DictionaryViewControllerDelegate,DeviceViewControllerDelegate>
 {
     NSIndexPath *accessoryButtonTappedIndexPath;
 }
@@ -152,9 +113,9 @@ static NSString *sValueWillChang = @"ValueWillChang";
     return @[
              @{sTitle : @"应用安全接入", sItems : @[
                        @{sTitle:@"鉴权",sMethod:@"Auth:",sItems:@[
-                                 @{sTitle:fappId,sKeyPath:@[ fappId],sDefaultValue:@"aphfRfLLHFbB0_2uMRRuwYQIbr8a",sValueWillChang:@"Auth_appId_valueWillChang:"},
-                                 @{sTitle:fsecret,sKeyPath:@[ fsecret],sDefaultValue:@"tfWyoIbcyY8idnE74o1fiQH_2Vwa"},
-                                 @{sTitle:vbaseUrl,sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.156:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"},
+                                 @{sTitle:fappId,sKeyPath:@[ fappId],sDefaultValue:@"aS1mdfGjkYxacp6mG9P2wAm20Fga",sValueWillChang:@"Auth_appId_valueWillChang:"},
+                                 @{sTitle:fsecret,sKeyPath:@[ fsecret],sDefaultValue:@"gxopH2Dj2JR3OGqGzJ0S2py6Or4a"},
+                                 @{sTitle:vbaseUrl,sKeyPath:@[ vbaseUrl],sDefaultValue:@"https://112.93.129.154:8743",sValueWillChang:@"Auth_baseUrl_valueWillChang:"},
                                  @{sTitle:@"Account",sMethod:@"SelectAccount:"}
                                  ]},
                        @{sTitle:@"刷新 token",sMethod:@"RefreshToken:"}]},
@@ -325,6 +286,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -548,6 +510,67 @@ static NSString *sValueWillChang = @"ValueWillChang";
         }
     }
 }
+
+#pragma mark - DeviceViewControllerDelegate
+-(void)DeviceViewController:(DeviceViewController *)deviceViewController tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([deviceViewController.title isEqualToString:@"PKLock"]) {
+        
+        NSDictionary *dic = [deviceViewController.funapis dictionaryForIndexPath:indexPath];
+        
+        NSString *rowTitle = dic[sTitle];
+        if ([rowTitle isEqualToString:@"LockUp"] || [rowTitle isEqualToString:@"LockDown"]) {
+            
+            NSMutableDictionary *Info = [[requestDict mutableDictionaryForKey:vPostCommandToDevice] mutableCopy];
+            Info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
+            NSDictionary *parasDict = nil;
+            NSString *operation = nil;
+            
+            if ([dic[sTitle] isEqualToString:@"LockUp"]) {
+                parasDict = @{@"value":@1};
+                operation = @"升锁";
+            }else if ([dic[sTitle] isEqualToString:@"LockDown"]){
+                parasDict = @{@"value":@0};
+                operation = @"降锁";
+            }
+            Info[fbody][fcommand][fparas] = parasDict;
+            
+            [[WebApi shareWebApi] PostCommandToDevice:Info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                UIAlertController *alertC = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
+                if (error) {
+                    alertC.message = [error localizedDescription];
+                }
+                
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+                    
+                    NSHTTPURLResponse *httpres = (NSHTTPURLResponse *)response;
+                    if ((httpres.statusCode == 200)&& (data.length > 0)){
+                        alertC.message = [NSString stringWithFormat:@"%@ 指令发送成功",operation];
+                    }else{
+                        alertC.message = [NSString stringWithFormat:@"status code:%d %@",[httpres statusCode],[NSHTTPURLResponse localizedStringForStatusCode:[httpres statusCode]]];
+                    }
+                }
+                [alertC addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alertC animated:YES completion:nil];
+            }];
+            
+        }else if([rowTitle isEqualToString:@"AutoRefresh"]){
+            
+        }
+    }
+        
+}
+
+-(void)DeviceViewController:(DeviceViewController *)deviceViewController viewDidAppear:(BOOL)animated{
+    
+}
+
+-(void)DeviceViewController:(DeviceViewController *)deviceViewController viewDidDisappear:(BOOL)animated{
+    
+}
+
+-(void)DeviceViewController:(DeviceViewController *)deviceViewController AlertController:(UIAlertController *)alertController AlertAction:(UIAlertAction *)alertAction forItem:(NSDictionary *)item{
+    
+}
 #pragma mark - tools
 //-(void)resetWebApi{
 //}
@@ -667,12 +690,26 @@ static NSString *sValueWillChang = @"ValueWillChang";
 -(void)SelectAccount:(NSDictionary *)dic{
     NSArray *accountArray = @[@{sTitle:@"地锁账户",
                                 fappId:@"WeVaYuAJufmg7Po989DkfvpD1q0a",
-                                fsecret:@"TS1UCHWOTIi3mg3F9xaQqEPbMuga"
+                                fsecret:@"TS1UCHWOTIi3mg3F9xaQqEPbMuga",
+                                fbaseURL:@"https://112.93.129.154:8743"
                                 },
                               @{sTitle:@"地磁账户",
                                 fappId:@"G6I0CJfYoVveYYaZdm9EMtaY46ca",
-                                fsecret:@"yuhtoKs1JEvGaHKWy5br0zHqXA0a"
-                                }
+                                fsecret:@"yuhtoKs1JEvGaHKWy5br0zHqXA0a",
+                                fbaseURL:@"https://112.93.129.154:8743"
+                                },
+                              @{
+                                  sTitle:@"追踪器",
+                                  fappId:@"aS1mdfGjkYxacp6mG9P2wAm20Fga",
+                                  fsecret:@"gxopH2Dj2JR3OGqGzJ0S2py6Or4a",
+                                  fbaseURL:@"https://112.93.129.154:8743"
+                                  },
+                              @{
+                                  sTitle:@"福州测试应用",
+                                  fappId:@"8p_cU4oPPOjYEOB60sZK79en7j0a",
+                                  fsecret:@"OW3_121Z2RxJ7Z64lV61mjK5hwYa",
+                                  fbaseURL:@"https://59.36.10.53:8743"
+                                  }
                               ];
     
     
@@ -684,6 +721,11 @@ static NSString *sValueWillChang = @"ValueWillChang";
             [self Auth_appId_valueWillChang:dic[fappId]];
             requestDict[fsecret] =dic[fsecret];
             [self.tableViewDetail reloadData];
+            if(dic[fbaseURL])
+            {
+                [WebApi shareWebApi].baseUrl = dic[fbaseURL];
+                
+            }
             
         }]];
     }
@@ -871,6 +913,7 @@ static NSString *sValueWillChang = @"ValueWillChang";
     }];
 }
 
+
 -(void)SelectDevice_MagnetMode_refresh:(DictionaryViewController *)dicVC{
     [self SelectDevice_Mode_refresh:dicVC completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
@@ -881,30 +924,99 @@ static NSString *sValueWillChang = @"ValueWillChang";
 }
 
 -(void)SelectDevice_LockMode:(NSDictionary *)dic{
-    DictionaryViewController *dicVC = [DictionaryViewController shareDictionaryViewController];
-    dicVC.title = @"地锁模式";
-    dicVC.showData = nil;
-    dicVC.showArray =  @[
-                         @{sTitle:@"数据信息",
-                           sItems:@[
-                                   @{sName:fappId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fappId]},
-                                   @{sName:fdeviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdeviceId]},
-                                   @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
-                                   @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
-                                   @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
-                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"up",@"down"],sValueMap:@{@"0":@"降",@"1":@"升"}}
-                                   ]
-                           },
-                         @{sTitle:@"通讯信息",
-                           sItems:@[
-                                   @{sName:@"Status Code",sValuePath:@[@"statusCode"]},
-                                   @{sName:@"通讯时间",sValuePath:@[@"requestTime"]}
-                                   ]
-                           }
-                         ];
-    dicVC.delegate = self;
-    [self.navigationController showViewController:dicVC sender:self];
-    [self SelectDevice_LockMode_refresh:dicVC];
+    
+    DeviceViewController *deviceVC = [DeviceViewController deviceViewController];
+    deviceVC.title = @"PKLock";
+    //zido
+    deviceVC.funapis = @[@{
+                               sTitle:requestDict[vSelectDevice][fdeviceId],
+                               sItems:@[
+                                       @{sTitle:@"LockUp"},
+                                       @{sTitle:@"LockDown"},
+                                       ]
+                               }
+                           ];
+    deviceVC.delegate = self;
+    [self.navigationController showViewController:deviceVC sender:self];
+    [self SelectDevice_LockMode_DeviceViewController_refresh:deviceVC];
+
+    
+    
+//    DictionaryViewController *dicVC = [DictionaryViewController shareDictionaryViewController];
+//    dicVC.title = @"地锁模式";
+//    dicVC.showData = nil;
+//    dicVC.showArray =  @[
+//                         @{sTitle:@"数据信息",
+//                           sItems:@[
+//                                   @{sName:fappId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fappId]},
+//                                   @{sName:fdeviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdeviceId]},
+//                                   @{sName:fgatewayId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fgatewayId]},
+//                                   @{sName:fserviceId,sValuePath:@[fdeviceDataHistoryDTOs,@0,fserviceId]},
+//                                   @{sName:ftimestamp,sValuePath:@[fdeviceDataHistoryDTOs,@0,ftimestamp]},
+//                                   @{sName:fstatus,sValuePath:@[fdeviceDataHistoryDTOs,@0,fdata,fstatus],sOptions:@[@"up",@"down"],sValueMap:@{@"0":@"降",@"1":@"升"}}
+//                                   ]
+//                           },
+//                         @{sTitle:@"通讯信息",
+//                           sItems:@[
+//                                   @{sName:@"Status Code",sValuePath:@[@"statusCode"]},
+//                                   @{sName:@"通讯时间",sValuePath:@[@"requestTime"]}
+//                                   ]
+//                           }
+//                         ];
+//    dicVC.delegate = self;
+//    [self.navigationController showViewController:dicVC sender:self];
+//    [self SelectDevice_LockMode_refresh:dicVC];
+    
+}
+
+-(void)SelectDevice_LockMode_DeviceViewController_refresh:(DeviceViewController *)deviceVC{
+    
+    NSMutableDictionary *info = [NSMutableDictionary dictionary];
+    info[fdeviceId] = requestDict[vSelectDevice][fdeviceId];
+    info[fgatewayId] = requestDict[vSelectDevice][fgatewayId];
+    info[fpageNo] = @"0";
+    info[fpageSize] = @"5";
+    [[WebApi shareWebApi] DeviceDataHistory:info completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            [deviceVC clearlog];
+            [deviceVC addlog:[[NSDate date] myDateString]];
+            [deviceVC addlog:[error description]];
+        }
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
+            [deviceVC clearlog];
+            [deviceVC addlog:[[NSDate date] myDateString]];
+            [deviceVC addlog:[NSString stringWithFormat:@"statusCode:%ld %@",(long)httpResponse.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode]]];
+            
+            if (data) {
+                NSMutableDictionary *mutableDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                NSArray *dataHistorys = mutableDic[fdeviceDataHistoryDTOs];
+                NSMutableString *log = [NSMutableString string];
+                for (NSDictionary* dataHistory in dataHistorys) {
+                    NSString *serviceId = dataHistory[fserviceId];
+                    NSDictionary *dataDic = dataHistory[fdata];
+                    NSString *dataValue = [[dataDic allValues][0] description];
+                    if ([serviceId isEqualToString:@"Parameter"]) {
+                        NSString *carState = [dataValue isEqualToString:@"00"] ? @"无车" : @"有车";
+                        [log appendFormat:@"%@ 车状态: %@\n",dataHistory[ftimestamp],carState];
+                    }else if([serviceId isEqualToString:@"Battery"]){
+                        [log appendFormat:@"%@ 电池: %@\n",dataHistory[ftimestamp],dataValue];
+                    }else if([serviceId isEqualToString:@"LockStatus"]){
+                        NSString *lockState = [dataValue isEqualToString:@"0"] ? @"降" : @"升";
+                        [log appendFormat:@"%@ 锁状态: %@\n",dataHistory[ftimestamp],lockState];
+                    }
+                }
+                
+                [deviceVC addlog:log];
+            }
+        }
+        
+        if (deviceVC.navigationController.topViewController == deviceVC) {
+            [self performSelector:@selector(SelectDevice_LockMode_DeviceViewController_refresh:) withObject:deviceVC afterDelay:5];
+        }
+    }];
+
     
 }
 

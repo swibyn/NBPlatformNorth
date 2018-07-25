@@ -7,6 +7,7 @@
 //
 
 #import "DataDictionary.h"
+#import <UIKit/UIKit.h>
 
 
 //NSMutableDictionary *appInfoDict = nil;
@@ -109,6 +110,40 @@ NSMutableDictionary *responseDict = nil;
 
 @end
 
+
+@implementation NSArray (apis)
+
+-(NSMutableArray *)itemsForSection:(NSInteger)section{
+    NSDictionary *dict = self[section];
+    NSMutableArray *array = dict[sItems];
+    return array;
+}
+
+-(NSString *)titleForSection:(NSInteger)section{
+    NSDictionary *dict = self[section];
+    NSString *title = dict[sTitle];
+    return title;
+}
+
+-(NSMutableDictionary *)dictionaryForIndexPath:(NSIndexPath *)indexPath{
+    NSArray *array = [self itemsForSection:indexPath.section];
+    NSMutableDictionary *dict = array[indexPath.row];
+    return dict;
+}
+
+-(NSMutableArray *)itemsForIndexPath:(NSIndexPath *)indexPath{
+    NSMutableDictionary *dict = [self dictionaryForIndexPath:indexPath];
+    NSMutableArray *items = dict[sItems];
+    return items;
+}
+
+-(NSMutableDictionary *)dictionaryForRow:(NSInteger)row atIndexPath:(NSIndexPath *)indexPath{
+    NSArray *array = [self itemsForIndexPath:indexPath];
+    NSMutableDictionary *dict = array[row];
+    return dict;
+}
+
+@end
 
 
 

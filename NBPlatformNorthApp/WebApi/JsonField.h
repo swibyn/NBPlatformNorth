@@ -12,6 +12,7 @@
 // Auth(鉴权)
 #define fappId @"appId"
 #define fsecret @"secret"
+#define fbaseURL @"baseURL"
 
 #define fscope @"scope"
 #define ftokenType @"tokenType"
